@@ -7,7 +7,7 @@
 <web-app>
   <servlet>
     <servlet-name>bob</servlet-name>
-    <servlet-class>HitServlet</servlet-class>
+    <servlet-class>SearchServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>

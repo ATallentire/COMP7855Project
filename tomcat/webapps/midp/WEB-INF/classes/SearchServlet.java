@@ -66,7 +66,7 @@ public class SearchServlet extends HttpServlet {
 			
 			"<br />\n" +
 			"<br />\n" +	
-			"<input type=\"button\" value=\"Upload A Photo\" onclick=\"location.href='http://localhost:9091/PhotoServer/uploads';\" />\n" +
+			"<input type=\"button\" value=\"Upload A Photo\" onclick=\"location.href='http://localhost:8081/midp/uploads';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
@@ -90,13 +90,13 @@ public class SearchServlet extends HttpServlet {
 	*/
 
 	int Count;
-	File file = new File("C:/tomcat/webapps/midp/Images");
+	File file = new File("C:/COMP7855Project/tomcat/webapps/midp/Images");
 	String[] imageList = file.list();
 		
 			
 	photoGallery = new ArrayList<String>();
 	imageCount = 0;
-	photoGallery.add(imageList[0]);
+	//photoGallery.add(imageList[0]);
 	
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
@@ -114,7 +114,7 @@ public class SearchServlet extends HttpServlet {
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/hits\" method=\"POST\">\n" +
 				"<h1> " + title + " </h1>\n" + 
-				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + (photoGallery.size()) + " Photos" + "</h2>\n" +
+				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + "1" + " Photos" + "</h2>\n" + //(photoGallery.size())
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Left\" />\n" +   //DownCount
@@ -122,9 +122,9 @@ public class SearchServlet extends HttpServlet {
 				"<input type=\"submit\" name=\"action\" value=\"Right\" />\n" +   //UpCount
 				"<br />\n" +
 				"<br />\n" +
-				"<img id=\"myImg\" src=\"Images/" + photoGallery.get(imageCount) + "\"" + " width=\"500\" height=\"500\">\n\n" +
+				"<img id=\"myImg\" src=\"Images/mypicture.jpeg\" width=\"640\" height=\"480\">\n\n" + //photoGallery.get(imageCount)
 				"<br />\n" +
-				"<b> " + photoGallery.get(imageCount) + " </b>\n" + 
+				"<b> " +  " </b>\n" + //photoGallery.get(imageCount)
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 
