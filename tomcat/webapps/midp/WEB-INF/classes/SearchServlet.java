@@ -66,7 +66,7 @@ public class SearchServlet extends HttpServlet {
 			
 			"<br />\n" +
 			"<br />\n" +	
-			"<input type=\"button\" value=\"Upload A Photo\" onclick=\"location.href='http://localhost:8081/midp/uploads';\" />\n" +
+			"<input type=\"button\" value=\"Upload A Photo\" onclick=\"location.href='http://localhost:8081/midp/index.html';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
