@@ -6,12 +6,22 @@
 
 <web-app>
   <servlet>
-    <servlet-name>bob</servlet-name>
+    <servlet-name>Search</servlet-name>
     <servlet-class>SearchServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>bob</servlet-name>
+    <servlet-name>Search</servlet-name>
+    <url-pattern>/search</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Photos</servlet-name>
+    <servlet-class>HitServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>Search</servlet-name>
     <url-pattern>/hits</url-pattern>
   </servlet-mapping>
 </web-app>

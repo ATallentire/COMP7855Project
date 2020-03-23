@@ -10,6 +10,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 
+
 public class SearchServlet extends HttpServlet {
   
 	int imageCount = 0;
@@ -46,31 +47,28 @@ public class SearchServlet extends HttpServlet {
 
 			"<b> Time </b>" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"start_time\" placeholder=\"Start Time\" /> <input type=\"text\" name=\"end_time\" placeholder=\"End Time\" />\n"   +
+			"<input type=\"text\" name=\"startDate\" placeholder=\"Start Date\" /> <input type=\"text\" name=\"endDate\" placeholder=\"End Date\" />\n"   +
 			"<br />\n" +
-			"Format of time, yyyyMMddHHmmss" + 
+			"Format of time, yyyyMMdd_HHmmss" + 
 			"<br />\n" +
 			"<br />\n" +
 
 			"<b> Location </b>" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"center_lat\" placeholder=\"Center Latitude\" /> \n"  +
+			"<input type=\"double\" name=\"lat\" placeholder=\"Center Latitude\" /> \n"  +
 			"<br />\n" +
-			"<input type=\"text\" name=\"center_lon\" placeholder=\"Center Longitude\" /> \n" +
+			"<input type=\"double\" name=\"lon\" placeholder=\"Center Longitude\" /> \n" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"Radius\" placeholder=\"Radius\" />\n" +
+			"<input type=\"double\" name=\"radius\" placeholder=\"Radius\" />\n" +
 			"<br />\n" +
 			"<br />\n" +				
 			
 			"<input type=\"submit\" value=\"Search Now\" />\n" +
 			
-			"<br />\n" +
-			"<br />\n" +	
-			"<input type=\"button\" value=\"Upload A Photo\" onclick=\"location.href='http://localhost:8081/midp/uploads';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
-
+		request.setAttribute("Poster", "Search");
 
   }
   
@@ -80,14 +78,25 @@ public class SearchServlet extends HttpServlet {
                      HttpServletResponse response)
       throws ServletException, IOException {
 
-	/*	
-	request.getParameter("caption")
-	request.getParameter("start_time")
-	request.getParameter("end_time")
-	request.getParameter("center_lat")
-	request.getParameter("center_lon")
-	request.getParameter("Radius")
-	*/
+	String page = request.getParameter("Poster");
+	
+	if ("Search".equals(page)) {
+		
+		String caption = request.getParameter("caption")
+		String startDate = request.getParameter("startDate")
+		String endDate = request.getParameter("endDate")
+		double lat = request.getParameter("lat")
+		double lon = request.getParameter("lon")
+		double searchDist = request.getParameter("radius")
+		
+		double[] searchLoc = new double[];
+		searchLoc[0] = lat;
+		searchLoc[1] = lon;
+		
+		ArrayList<String[]> photoDetails = ReadDB();
+		ArrayList<String[]> photoGallery = searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
+	}
+	
 
 	int Count;
 	File file = new File("C:/COMP7855Project/tomcat/webapps/midp/Images");
@@ -101,6 +110,14 @@ public class SearchServlet extends HttpServlet {
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
 	String title = "Searched Photo Gallery";
+
+	String action = request.getParameter("action");
+
+	if ("Left".equals(action) && imageCount > 0) {
+		imageCount = imageCount - 1;
+	} else if ("Right".equals(action) && imageCount < (photoGallery.size() - 1)) {
+		imageCount = imageCount + 1;
+	}
 
 	try{
 
@@ -118,11 +135,11 @@ public class SearchServlet extends HttpServlet {
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Left\" />\n" +   //DownCount
-				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/hits';\" />\n" +
+				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Right\" />\n" +   //UpCount
 				"<br />\n" +
 				"<br />\n" +
-				"<img id=\"myImg\" src=\"Images/mypicture.jpeg\" width=\"640\" height=\"480\">\n\n" + //photoGallery.get(imageCount)
+				"<img id=\"myImg\" src=\"Images/" + photoGallery.get(imageCount) + "\"" width=\"640\" height=\"480\">\n\n" + //photoGallery.get(imageCount)
 				"<br />\n" +
 				"<b> " +  " </b>\n" + //photoGallery.get(imageCount)
 				"</div>\n</form>\n" +
