@@ -4,11 +4,24 @@ import java.io.*;
 public static class DataTransfer {
 	Connection con = null;
 	
-	public DataTransfer() {
+	public void TableCheck() {
 		try {
                     Class.forName("oracle.jdbc.OracleDriver");
-                    } 
-                    catch (Exception ex) { }
+					con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
+					DatabaseMetaData meta = con.getMetaData();
+					ResultSet tables = meta.getTables(null, null, "photos", null);
+					
+					if (!tables.next()) {
+						con.executeUpdate("CREATE TABLE photos (name string(10), caption string(30), date string(10), latitude string(10), longitude string(10));");
+						System.out.println("No Table, One has been created");
+                    }
+					else {
+						System.out.println("Table exists");
+					}
+					con.close();
+		}
+        catch(SQLException ex) { }
+				  
 	}
 	
 	public void WriteDB(String imageName, String caption, String date, String lat, String lon) {
