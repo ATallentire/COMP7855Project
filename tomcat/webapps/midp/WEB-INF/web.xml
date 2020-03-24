@@ -35,7 +35,7 @@
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>Search</servlet-name>
+    <servlet-name>Photos</servlet-name>
     <url-pattern>/hits</url-pattern>
   </servlet-mapping>
   
