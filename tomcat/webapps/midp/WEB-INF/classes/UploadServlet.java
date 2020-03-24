@@ -31,7 +31,7 @@ public class UploadServlet extends HttpServlet {
 	String latitude = "";
 	String longitude = "";
 	String fileName = "";
-	DataTransfer DB;
+	DataTransfer DB = new DataTransfer();;
 	
 	@Override
 	public void init() throws ServletException{
@@ -99,7 +99,7 @@ public class UploadServlet extends HttpServlet {
 					String fieldvalue = fileItem.getString();
 					System.out.println(fieldname+"\n " +fieldvalue);
 					if(fieldname.equals("date")){
-						date = fieldvalue;
+						date = fieldvalue + "_000000";
 					}
 					else if(fieldname.equals("caption")){
 						caption = fieldvalue;
@@ -143,9 +143,9 @@ public class UploadServlet extends HttpServlet {
 		DB.WriteDB(fileName, caption, date, latitude, longitude);
 			
 		} catch (FileUploadException e) {
-			out.write("Exception in uploading file.");
+			out.write("Exception in uploading file." + e);
 		} catch (Exception e) {
-			out.write("Exception in uploading file.");
+			out.write("Exception in uploading file." + e);
 		}
 		out.write("</body></html>");
 	}

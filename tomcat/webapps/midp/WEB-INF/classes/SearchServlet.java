@@ -15,9 +15,9 @@ import static java.lang.Math.sqrt;
 public class SearchServlet extends HttpServlet {
   
 	int imageCount = 0;
-	public static ArrayList<String[]> photoGallery = null;
-	DataTransfer DB;
-	SearchUtility SU;
+	public static ArrayList<String[]> photoGallery = new ArrayList<String[]>();
+	DataTransfer DB = new DataTransfer();
+	SearchUtility SU = new SearchUtility();
 	
 // Method to handle initial GET method request.
   public void doGet(HttpServletRequest request,
@@ -38,7 +38,6 @@ public class SearchServlet extends HttpServlet {
 			"<div align=\"center\" >\n" +
 			"<form action=\"/midp/search\" method=\"POST\">\n" +
 			"<h1> " + title + " </h1>\n" + 
-			"<p> Enter nothing into search criteria you dont want to use </p>" +
 			"<br />\n" +
 			"<br />\n" +	
 			
@@ -58,11 +57,11 @@ public class SearchServlet extends HttpServlet {
 
 			"<b> Location </b>" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"lat\" placeholder=\"Center Latitude\" /> \n"  +
+			"Latitude: <input type=\"text\" name=\"lat\" value=\"49\" /> \n"  +
 			"<br />\n" +
-			"<input type=\"text\" name=\"lon\" placeholder=\"Center Longitude\" /> \n" +
+			"Longitude: <input type=\"text\" name=\"lon\" value=\"120\" /> \n" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"radius\" placeholder=\"Radius\" />\n" +
+			"Radius: <input type=\"text\" name=\"radius\" value=\"100000\" />\n" +
 			"<br />\n" +
 			"<br />\n" +				
 			
@@ -81,52 +80,67 @@ public class SearchServlet extends HttpServlet {
   public void doPost(HttpServletRequest request,
                      HttpServletResponse response)
       throws ServletException, IOException {
-
-	String page = request.getParameter("Poster");
 	
-	if ("Search".equals(page)) {
+	String action = request.getParameter("action");
+	
+	if (action == null) {
 		
 		String caption = request.getParameter("caption");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		
-		double[] searchLoc = {0,0};
-		double searchDist = 10000000;
 		
-		try{
-		double lat = Double.parseDouble(request.getParameter("lat"));
-		double lon = Double.parseDouble(request.getParameter("lon"));
-		searchDist = Double.parseDouble(request.getParameter("radius"));
-		searchLoc[0] = lat;
-		searchLoc[1] = lon;
-		}		
-		catch (Exception e)
-		{}
+		double searchDist = 100000;
+		double lat = 49;
+		double lon = 120;
+		double[] searchLoc = new double[2];
+		
+		String latString = request.getParameter("lat");
+		String lonString = request.getParameter("lon");
+		String searchDistString = request.getParameter("radius");
 	
 		//Checking for any empty search fields that will ruin the search
-		if(startDate.equals(null))
-			startDate = 00010101_000001; //Earliest date
+		if(caption.equals(""))
+			caption = null;
 		
-		if(endDate.equals(null)
-			endDate = 22220101_000001; //Real far away date
+		if(startDate.equals(""))
+			startDate = "00010101_000001"; //Earliest date
+		
+		if(endDate.equals(""))
+			endDate = "22220101_000001"; //Real far away date
 	
+		try{
+		if(!latString.equals(null)){
+			lat = Double.parseDouble(latString);
+		}
+
+		if(!lonString.equals(null)){
+			lon = Double.parseDouble(lonString);
+		}
+		if(!searchDistString.equals(null)){
+			searchDist = Double.parseDouble(searchDistString);
+		}
+		}
+		catch (Exception e) {}
+		
+		searchLoc[0] = lat;
+		searchLoc[1] = lon;
+		
 		ArrayList<String[]> photoDetails = DB.ReadDB();
-		ArrayList<String[]> photoGallery = SU.searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
+		photoGallery = SU.searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
 		imageCount = 0;
 	}
 	
-
+/*
 	int Count;
 	File file = new File("C:/COMP7855Project/tomcat/webapps/midp/Images");
 	String[] imageList = file.list();
-		
+*/		
 
 	
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
 	String title = "Searched Photo Gallery";
-
-	String action = request.getParameter("action");
 
 	if ("Left".equals(action) && imageCount > 0) {
 		imageCount = imageCount - 1;
@@ -134,6 +148,7 @@ public class SearchServlet extends HttpServlet {
 		imageCount = imageCount + 1;
 	}
 
+	if(photoGallery.size() > 0){
 	try{
 			String[] photoData = photoGallery.get(imageCount);
 			String docType =
@@ -144,9 +159,9 @@ public class SearchServlet extends HttpServlet {
 				"<body bgcolor=\"#d9d9d9\">\n" +
 				"<ul>\n" +
 				"<div align=\"center\" >\n" +
-				"<form action=\"/midp/hits\" method=\"POST\">\n" +
+				"<form action=\"/midp/search\" method=\"POST\">\n" +
 				"<h1> " + title + " </h1>\n" + 
-				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + "1" + " Photos" + "</h2>\n" + //(photoGallery.size())
+				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + photoGallery.size() + " Photos" + "</h2>\n" + 
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Left\" />\n" +   //DownCount
@@ -154,15 +169,38 @@ public class SearchServlet extends HttpServlet {
 				"<input type=\"submit\" name=\"action\" value=\"Right\" />\n" +   //UpCount
 				"<br />\n" +
 				"<br />\n" +
-				"<img id=\"myImg\" src=\"Images/" + photoData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoGallery.get(imageCount)
-				"<b> " +  " </b>\n" + //photoGallery.get(imageCount)
+				"<img id=\"myImg\" src=\"Images/" + photoData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoData[0]
+				"<b> " +  " </b>\n" + 
 				
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 
 		}
 		catch(Exception e){
-			response.sendRedirect("http://localhost:8081/midp/search");
+			//response.sendRedirect("http://localhost:8081/midp/search");
 		}
+	}
+	else{
+		String docType =
+			"<!doctype html public \"-//w3c//dtd html 4.0 " +
+			"transitional//en\">\n";
+			out.println(
+				"<html>\n" +			
+				"<body bgcolor=\"#d9d9d9\">\n" +
+				"<ul>\n" +
+				"<div align=\"center\" >\n" +
+				"<form action=\"/midp/hits\" method=\"POST\">\n" +
+				"<h1> " + title + " </h1>\n" + 
+				"<h2 align=\"center\">" + "0"  + "/" + "0" + " Photos" + "</h2>\n" +
+				"<br />\n" +		
+				"<br />\n" +
+				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
+				"<br />\n" +
+				"<br />\n" +
+				"<b> " +  " </b>\n" + //photoGallery.get(imageCount)
+				
+				"</div>\n</form>\n" +
+				"</form>\n</body>\n</html>");
+	}
 	}
 }

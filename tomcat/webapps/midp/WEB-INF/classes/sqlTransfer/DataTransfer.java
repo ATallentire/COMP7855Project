@@ -4,18 +4,18 @@ import java.io.*;
 import java.util.*;
 
 public class DataTransfer {
-	Connection con = null;
-	Statement stmt = null;
+//	Connection con = null;
+//	Statement stmt = null;
 	public DataTransfer() {
 		try {
                     Class.forName("oracle.jdbc.OracleDriver");
-					con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
+					Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
 					DatabaseMetaData meta = con.getMetaData();
-					ResultSet tables = meta.getTables(null, null, "photos", null);
+					ResultSet tables = meta.getTables(null, null, "PHOTOS", null);
 					
-					stmt = con.createStatement();
+					Statement stmt = con.createStatement();
 					if (!tables.next()) {
-						stmt.executeUpdate("CREATE TABLE photos (name varchar(10), caption varchar(30), date varchar(10), latitude varchar(10), longitude varchar(10))");
+						stmt.executeUpdate("CREATE TABLE photos (name char(30), caption char(30), imDate char(20), latitude char(10), longitude char(10))");
 						System.out.println("No Table, One has been created");
                     }
 					else {
@@ -28,13 +28,13 @@ public class DataTransfer {
 	}
 	
 	public void WriteDB(String imageName, String caption, String date, String lat, String lon) {
-	
+		Connection con = null;
 		try {
-		con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
+		 con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
 		con.setAutoCommit(false);
 		
 		//using Transactions
-        PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO photos (name, caption, date, latitude, longitude) VALUES (?,?,?,?,?)");
+        PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO photos (name, caption, imDate, latitude, longitude) VALUES (?,?,?,?,?)");
 
         preparedStatement.setString(1, imageName);
         preparedStatement.setString(2, caption);
@@ -67,21 +67,28 @@ public class DataTransfer {
 	
 	public ArrayList<String[]> ReadDB() {
 		ArrayList<String[]> allData = new ArrayList<String[]>();
+
+		Connection con = null;
 		
 		try {
 			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
-			
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM photos");
-			
+					
 			while (rs.next()) {
-				String[] data = null;
+				String[] data = new String[5];
 				
 				data[0] = rs.getString("name");
-				data[1] = rs.getString("caption");
-				data[2] = rs.getString("date");
-				data[3] = rs.getString("latitude");
-				data[4] = rs.getString("longitude");
+				System.out.println(data[0]);
+				data[1] = rs.getString("CAPTION");
+				System.out.println(data[1]);
+				data[2] = rs.getString("IMDATE");
+				System.out.println(data[2]);
+				data[3] = rs.getString("LATITUDE");
+				System.out.println(data[3]);
+				data[4] = rs.getString("LONGITUDE");
+				System.out.println(data[4]);
 				allData.add(data);
 				}
 					

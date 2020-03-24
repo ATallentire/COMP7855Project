@@ -12,7 +12,7 @@ public class SearchUtility {
     public static ArrayList<String[]> searchFunc(String minDate, String maxDate, String captionSearch,
     double searchDist, double[] searchLoc, ArrayList<String[]> photoDetails) {
 
-        ArrayList<String[]> photoGallery = null;
+        ArrayList<String[]> photoGallery = new ArrayList<String[]>();
 
         for (int i = 0; i < photoDetails.size(); i++) {
 
@@ -21,8 +21,8 @@ public class SearchUtility {
 
             //Get date
             Date date = new Date();
-			Date minDateD = null;
-			Date maxDateD = null;
+			Date minDateD = new Date();
+			Date maxDateD = new Date();
             String[] contents = data[2].split("_");
             try {
                 date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents[0] + "_" + contents[1]);

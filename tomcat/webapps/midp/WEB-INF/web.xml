@@ -31,12 +31,12 @@
   
   <servlet>
     <servlet-name>Photos</servlet-name>
-    <servlet-class>MainServlet</servlet-class>
+    <servlet-class>HitServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>Photos</servlet-name>
-    <url-pattern>/main</url-pattern>
+    <url-pattern>/hits</url-pattern>
   </servlet-mapping>
   
 	<servlet-mapping>
