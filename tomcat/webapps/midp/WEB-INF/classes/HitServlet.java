@@ -10,7 +10,7 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import sqlTransfer.DataTransfer;
 
-public class MainServlet extends HttpServlet {
+public class HitServlet extends HttpServlet {
   private int mCount;
   private String imDir = "C:/COMP7855Project/tomcat/webapps/midp/Images";
   
@@ -75,7 +75,7 @@ public class MainServlet extends HttpServlet {
 	// write the image to a file
 	ImageIO.write(image, "jpeg", imageFile);
          
-	//DB.WriteDB(imName, caption, date, latitude, longitude);
+	DB.WriteDB(imName, caption, date, latitude, longitude);
 		
     out.write("Received Post. File Name: " + imName + ", File Date: " + contents[0] + "_" + contents[1]);
   }

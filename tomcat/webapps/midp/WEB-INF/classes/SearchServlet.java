@@ -171,7 +171,11 @@ public class SearchServlet extends HttpServlet {
 				"<br />\n" +
 				"<img id=\"myImg\" src=\"Images/" + photoData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoData[0]
 				"<b> " +  " </b>\n" + 
-				
+				"<br />\n" +		
+				"Photo Caption: " + photoData[1] + "<br />\n" +
+				"Photo Date (yyyyMMdd_HHmmss): " + photoData[2] + "<br />\n" +
+				"Latitude: " + photoData[3] + "<br />\n" +
+				"Longitude: " + photoData[4] +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 

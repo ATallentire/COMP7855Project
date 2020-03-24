@@ -4,12 +4,15 @@ import java.io.*;
 import java.util.*;
 
 public class DataTransfer {
+	
+	// SET ORACLE DB PASSWORD HERE
+	String password = "";
 //	Connection con = null;
 //	Statement stmt = null;
 	public DataTransfer() {
 		try {
                     Class.forName("oracle.jdbc.OracleDriver");
-					Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
+					Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 					DatabaseMetaData meta = con.getMetaData();
 					ResultSet tables = meta.getTables(null, null, "PHOTOS", null);
 					
@@ -30,7 +33,7 @@ public class DataTransfer {
 	public void WriteDB(String imageName, String caption, String date, String lat, String lon) {
 		Connection con = null;
 		try {
-		 con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
+		 con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 		con.setAutoCommit(false);
 		
 		//using Transactions
@@ -71,7 +74,7 @@ public class DataTransfer {
 		Connection con = null;
 		
 		try {
-			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
+			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM photos");
