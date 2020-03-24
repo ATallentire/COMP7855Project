@@ -1,18 +1,20 @@
+package sqlTransfer;
 import java.sql.*;
 import java.io.*;
-
-public static class DataTransfer {
+import java.util.*;
+public class DataTransfer {
 	Connection con = null;
-	
-	public void TableCheck() {
+	Statement stmt = null;
+	public DataTransfer() {
 		try {
                     Class.forName("oracle.jdbc.OracleDriver");
 					con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
 					DatabaseMetaData meta = con.getMetaData();
 					ResultSet tables = meta.getTables(null, null, "photos", null);
 					
+					stmt = con.createStatement();
 					if (!tables.next()) {
-						con.executeUpdate("CREATE TABLE photos (name string(10), caption string(30), date string(10), latitude string(10), longitude string(10));");
+						stmt.executeUpdate("CREATE TABLE photos (name varchar(10), caption varchar(30), date varchar(10), latitude varchar(10), longitude varchar(10))");
 						System.out.println("No Table, One has been created");
                     }
 					else {
@@ -20,7 +22,7 @@ public static class DataTransfer {
 					}
 					con.close();
 		}
-        catch(SQLException ex) { }
+        catch(Exception ex) { }
 				  
 	}
 	
@@ -63,7 +65,7 @@ public static class DataTransfer {
 	}
 	
 	public ArrayList<String[]> ReadDB() {
-		ArrayList<String[]> allData = new ArrayList<String[]>;
+		ArrayList<String[]> allData = new ArrayList<String[]>();
 		
 		try {
 			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "Austin");
@@ -72,7 +74,7 @@ public static class DataTransfer {
             ResultSet rs = stmt.executeQuery("SELECT * FROM photos");
 			
 			while (rs.next()) {
-				String[] data = new String[];
+				String[] data = null;
 				
 				data[0] = rs.getString("name");
 				data[1] = rs.getString("caption");
@@ -104,3 +106,4 @@ public static class DataTransfer {
 	
 		return allData;
 	}
+}

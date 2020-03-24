@@ -5,6 +5,7 @@ import java.sql.*;
 import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
+import sqlTransfer.*;
 import static java.lang.Math.asin;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -14,8 +15,10 @@ import static java.lang.Math.sqrt;
 public class SearchServlet extends HttpServlet {
   
 	int imageCount = 0;
-	public static ArrayList<String> photoGallery = null;
-  
+	public static ArrayList<String[]> photoGallery = null;
+	DataTransfer DB;
+	SearchUtility SU;
+	
 // Method to handle initial GET method request.
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
@@ -33,7 +36,7 @@ public class SearchServlet extends HttpServlet {
 			"<body bgcolor=\"#d9d9d9\">\n" +
 			"<ul>\n" +
 			"<div align=\"center\" >\n" +
-			"<form action=\"/midp/hits\" method=\"POST\">\n" +
+			"<form action=\"/midp/search\" method=\"POST\">\n" +
 			"<h1> " + title + " </h1>\n" + 
 			"<p> Enter nothing into search criteria you dont want to use </p>" +
 			"<br />\n" +
@@ -55,23 +58,17 @@ public class SearchServlet extends HttpServlet {
 
 			"<b> Location </b>" +
 			"<br />\n" +
-			"<input type=\"double\" name=\"lat\" placeholder=\"Center Latitude\" /> \n"  +
+			"<input type=\"text\" name=\"lat\" placeholder=\"Center Latitude\" /> \n"  +
 			"<br />\n" +
-			"<input type=\"double\" name=\"lon\" placeholder=\"Center Longitude\" /> \n" +
+			"<input type=\"text\" name=\"lon\" placeholder=\"Center Longitude\" /> \n" +
 			"<br />\n" +
-			"<input type=\"double\" name=\"radius\" placeholder=\"Radius\" />\n" +
+			"<input type=\"text\" name=\"radius\" placeholder=\"Radius\" />\n" +
 			"<br />\n" +
 			"<br />\n" +				
 			
 			"<input type=\"submit\" value=\"Search Now\" />\n" +
 			
-<<<<<<< HEAD
-			"<br />\n" +
-			"<br />\n" +	
-			"<input type=\"button\" value=\"Upload A Photo\" onclick=\"location.href='http://localhost:8081/midp/select.html';\" />\n" +
-=======
-
->>>>>>> 03db5daee775b695595d3f2b464dbae51d0a7445
+			"<input type=\"button\" value=\"Upload from desktop\" onclick=\"location.href='http://localhost:8081/midp/select.html';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
@@ -89,19 +86,27 @@ public class SearchServlet extends HttpServlet {
 	
 	if ("Search".equals(page)) {
 		
-		String caption = request.getParameter("caption")
-		String startDate = request.getParameter("startDate")
-		String endDate = request.getParameter("endDate")
-		double lat = request.getParameter("lat")
-		double lon = request.getParameter("lon")
-		double searchDist = request.getParameter("radius")
-		
-		double[] searchLoc = new double[];
+		String caption = request.getParameter("caption");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		double[] searchLoc = null;
+		double searchDist = 10000000;
+		try{
+		double lat = Double.parseDouble(request.getParameter("lat"));
+		double lon = Double.parseDouble(request.getParameter("lon"));
+		searchDist = Double.parseDouble(request.getParameter("radius"));
 		searchLoc[0] = lat;
 		searchLoc[1] = lon;
+		}
 		
-		ArrayList<String[]> photoDetails = ReadDB();
-		ArrayList<String[]> photoGallery = searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
+		catch (Exception e)
+		{}
+		
+		
+
+		
+		ArrayList<String[]> photoDetails = DB.ReadDB();
+		ArrayList<String[]> photoGallery = SU.searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
 	}
 	
 
@@ -109,8 +114,6 @@ public class SearchServlet extends HttpServlet {
 	File file = new File("C:/COMP7855Project/tomcat/webapps/midp/Images");
 	String[] imageList = file.list();
 		
-			
-	photoGallery = new ArrayList<String>();
 	imageCount = 0;
 	//photoGallery.add(imageList[0]);
 	
@@ -127,7 +130,7 @@ public class SearchServlet extends HttpServlet {
 	}
 
 	try{
-
+			String[] photoData = photoGallery.get(imageCount);
 			String docType =
 			"<!doctype html public \"-//w3c//dtd html 4.0 " +
 			"transitional//en\">\n";
@@ -146,15 +149,15 @@ public class SearchServlet extends HttpServlet {
 				"<input type=\"submit\" name=\"action\" value=\"Right\" />\n" +   //UpCount
 				"<br />\n" +
 				"<br />\n" +
-				"<img id=\"myImg\" src=\"Images/" + photoGallery.get(imageCount) + "\"" width=\"640\" height=\"480\">\n\n" + //photoGallery.get(imageCount)
-				"<br />\n" +
+				"<img id=\"myImg\" src=\"Images/" + photoData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoGallery.get(imageCount)
 				"<b> " +  " </b>\n" + //photoGallery.get(imageCount)
+				
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 
 		}
 		catch(Exception e){
-			response.sendRedirect("http://localhost:8081/midp/hits");
+			response.sendRedirect("http://localhost:8081/midp/search");
 		}
 	}
 }

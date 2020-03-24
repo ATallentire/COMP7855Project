@@ -1,10 +1,10 @@
-
+package sqlTransfer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public static class SearchUtility {
+public class SearchUtility {
 
 	//This function takes the search criteria and all photo data and finds matches between the two
 	//Must Pass searchDist and searchLoc as doubles, everything else is a string
@@ -12,7 +12,7 @@ public static class SearchUtility {
     public static ArrayList<String[]> searchFunc(String minDate, String maxDate, String captionSearch,
     double searchDist, double[] searchLoc, ArrayList<String[]> photoDetails) {
 
-        ArrayList<String> photoGallery = new ArrayList<String[]>();
+        ArrayList<String[]> photoGallery = null;
 
         for (int i = 0; i < photoDetails.size(); i++) {
 
@@ -22,6 +22,8 @@ public static class SearchUtility {
 
             //Get date
             Date date = new Date();
+			Date minDateD = null;
+			Date maxDateD = null;
             String[] contents = data[2].split("_");
             try {
                 date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents[0] + "_" + contents[1]);

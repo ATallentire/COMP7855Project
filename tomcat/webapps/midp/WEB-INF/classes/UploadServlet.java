@@ -136,7 +136,7 @@ public class UploadServlet extends HttpServlet {
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
-			
+			//****** Write parameters and image name to data base here
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file.");
 		} catch (Exception e) {
