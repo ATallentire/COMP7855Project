@@ -132,7 +132,7 @@ public class UploadServlet extends HttpServlet {
 			+ longitude+ "\n" +
 			"<br />\n" +
 			"<br />\n" +
-			"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/hits';\" />\n" +
+			"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
