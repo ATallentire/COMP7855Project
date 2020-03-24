@@ -16,7 +16,6 @@ public class SearchUtility {
 
         for (int i = 0; i < photoDetails.size(); i++) {
 
-            //data: 0 image path. 1 caption, 2 cap. 3 date. 4 lat. 5 lon
 			//data: 0 image name. 1 caption, 2 date, 3 lat, 4 lon
             String[] data = photoDetails.get(i);
 

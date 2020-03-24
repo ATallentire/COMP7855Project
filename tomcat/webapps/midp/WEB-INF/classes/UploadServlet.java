@@ -19,6 +19,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import sqlTransfer.DataTransfer;
+
 //@WebServlet("/uploads")
 public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +31,7 @@ public class UploadServlet extends HttpServlet {
 	String latitude = "";
 	String longitude = "";
 	String fileName = "";
+	DataTransfer DB;
 	
 	@Override
 	public void init() throws ServletException{
@@ -136,7 +139,9 @@ public class UploadServlet extends HttpServlet {
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
-			//****** Write parameters and image name to data base here
+		//Upload to database
+		DB.WriteDB(fileName, caption, date, latitude, longitude);
+			
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file.");
 		} catch (Exception e) {

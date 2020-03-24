@@ -89,24 +89,30 @@ public class SearchServlet extends HttpServlet {
 		String caption = request.getParameter("caption");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		double[] searchLoc = null;
+		
+		double[] searchLoc = {0,0};
 		double searchDist = 10000000;
+		
 		try{
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request.getParameter("lon"));
 		searchDist = Double.parseDouble(request.getParameter("radius"));
 		searchLoc[0] = lat;
 		searchLoc[1] = lon;
-		}
-		
+		}		
 		catch (Exception e)
 		{}
+	
+		//Checking for any empty search fields that will ruin the search
+		if(startDate.equals(null))
+			startDate = 00010101_000001; //Earliest date
 		
-		
-
-		
+		if(endDate.equals(null)
+			endDate = 22220101_000001; //Real far away date
+	
 		ArrayList<String[]> photoDetails = DB.ReadDB();
 		ArrayList<String[]> photoGallery = SU.searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
+		imageCount = 0;
 	}
 	
 
@@ -114,8 +120,7 @@ public class SearchServlet extends HttpServlet {
 	File file = new File("C:/COMP7855Project/tomcat/webapps/midp/Images");
 	String[] imageList = file.list();
 		
-	imageCount = 0;
-	//photoGallery.add(imageList[0]);
+
 	
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
