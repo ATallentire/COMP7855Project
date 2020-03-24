@@ -65,6 +65,7 @@ public class SearchServlet extends HttpServlet {
 			
 			"<input type=\"submit\" value=\"Search Now\" />\n" +
 			
+
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 

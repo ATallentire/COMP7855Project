@@ -5,6 +5,20 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+  <display-name>uploads</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>tempfile.dir</param-name>
+    <param-value>tmpfiles</param-value>
+  </context-param>
+  
+  <servlet>
+	<servlet-name>upload</servlet-name>
+    <servlet-class>UploadServlet</servlet-class>
+  </servlet>
+  
   <servlet>
     <servlet-name>Search</servlet-name>
     <servlet-class>SearchServlet</servlet-class>
@@ -24,4 +38,10 @@
     <servlet-name>Search</servlet-name>
     <url-pattern>/hits</url-pattern>
   </servlet-mapping>
+  
+	<servlet-mapping>
+    <servlet-name>upload</servlet-name>
+    <url-pattern>/uploads</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
