@@ -82,8 +82,14 @@ public class UploadServlet extends HttpServlet {
 				System.out.println("Absolute Path at server="+file.getAbsolutePath());
 				fileItem.write(file);
 				out.write("File "+fileItem.getName()+ " uploaded successfully.");
-				out.write("<br>");
-				out.write("<a href=\"UploadDownloadFileServlet?fileName="+fileItem.getName()+"\">Download "+fileItem.getName()+"</a>");
+				out.println(
+						"<html>\n" +
+							"<br />\n" +
+							"<br />\n" +	
+							"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/hits';\" />\n" +
+							"</div>\n</form>\n" +
+							"</form>\n</body>\n</html>");
+				//out.write("<a href=\"UploadDownloadFileServlet?fileName="+fileItem.getName()+"\">Download "+fileItem.getName()+"</a>");
 			}
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file.");
