@@ -8,9 +8,9 @@ import org.apache.commons.codec.binary.Base64;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
+import sqlTransfer.DataTransfer;
 
-
-public class HitServlet extends HttpServlet {
+public class MainServlet extends HttpServlet {
   private int mCount;
   private String imDir = "C:/COMP7855Project/tomcat/webapps/midp/Images";
   
@@ -40,6 +40,8 @@ public class HitServlet extends HttpServlet {
                      HttpServletResponse response)
       throws ServletException, IOException {
 
+	DataTransfer DB = new DataTransfer();
+	
     PrintWriter out = response.getWriter();
 	/// HANDLE IMAGE HERE
     response.setContentType("text");
@@ -73,6 +75,7 @@ public class HitServlet extends HttpServlet {
 	// write the image to a file
 	ImageIO.write(image, "jpeg", imageFile);
          
+	//DB.WriteDB(imName, caption, date, latitude, longitude);
 		
     out.write("Received Post. File Name: " + imName + ", File Date: " + contents[0] + "_" + contents[1]);
   }
