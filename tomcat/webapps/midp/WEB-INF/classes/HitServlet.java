@@ -3,9 +3,16 @@ import javax.servlet.*;
 import java.io.*;
 import java.sql.*;
 import java.io.*;
+import java.util.*;
+import org.apache.commons.codec.binary.Base64;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+
 
 public class HitServlet extends HttpServlet {
   private int mCount;
+  private String imDir = "C:/COMP7855Project/tomcat/webapps/midp/Images";
   
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
@@ -19,9 +26,9 @@ public class HitServlet extends HttpServlet {
       out.println("<html>\n" +
                 "<body>\n" + 
                 "<form action=\"/midp/search\" method=\"GET\">\n" +
-                "First Name: <input type=\"text\" name=\"first_name\" value=\"GRANT\" />\n"   +
+                "First Name: <input type=\"text\" name=\"first_name\" value=\"Grant\" />\n"   +
                 "<br />\n" +
-                "Last Name: <input type=\"text\" name=\"last_name\" />\n"   +
+                "Last Name: <input type=\"text\" name=\"last_name\" value=\"Howard\" />\n"   +
                 "<input type=\"submit\" value=\"Submit\" />\n"
                 + 
                 "</form>\n</body>\n</html\n");
@@ -33,55 +40,43 @@ public class HitServlet extends HttpServlet {
                      HttpServletResponse response)
       throws ServletException, IOException {
 
-String errMsg = "Testing";
-     // Set response content type
-	 // Store data in oracle database - inactive code for now
-/*try {
-try {
-Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-} catch (Exception ex) { }
-		Connection con = DriverManager.getConnection("jdbc:ucanaccess://c:/temp/Data Storage/Database1.accdb");
-errMsg += "Con";
-			Statement stmt = con.createStatement();
-errMsg += "stmt";
-			stmt.executeUpdate("INSERT INTO staff (name, address) VALUES ('"+ request.getParameter("first_name") + "','" + request.getParameter("last_name") +"')");
-			stmt.close();
-			con.close();
-errMsg += "End";
-		} 
-		catch(SQLException ex) { 
-				errMsg = errMsg + "\n--- SQLException caught ---\n"; 
-				while (ex != null) { 
-					errMsg += "Message: " + ex.getMessage (); 
-					errMsg += "SQLState: " + ex.getSQLState (); 
-					errMsg += "ErrorCode: " + ex.getErrorCode (); 
-					ex = ex.getNextException(); 
-					errMsg += "";
-				} 
-		} 
-		*/
     PrintWriter out = response.getWriter();
+	/// HANDLE IMAGE HERE
+    response.setContentType("text");
+
+	String dataString = request.getParameter("data");
+	String encodedImage = request.getParameter("image");
+	String imName = request.getParameter("name");
 	
-      response.setContentType("text/html");
+	//BufferedImage = decodeToImage(encodedImage);
+	
+	String[] contents = dataString.split("_");
+	String date = "";
+	String caption = "";
+	String latitude = "";
+	String longitude = "";
+	
+	if (contents != null){
+		date = (contents[0] + "_" + contents[1]);
+		caption = contents[2];
+		latitude = contents[3];
+		longitude = contents[4];
+	}
+	File imageFile = new File((imDir+File.separator+imName));
+	ByteArrayInputStream imStream = new ByteArrayInputStream(Base64.decodeBase64(encodedImage.getBytes()));
+	
+	BufferedImage image = null;
+	
+	image = ImageIO.read(imStream);
+	imStream.close();
 
-	  String title = "Using Post Method to Read Form Data";
-
-      String docType =
-      "<!doctype html public \"-//w3c//dtd html 4.0 " +
-      "transitional//en\">\n";
-      out.println(docType +
-                "<html>\n" +
-                "<head><title>" + title +  "</title></head>\n" +
-                "<body bgcolor=\"#f0f0f0\">\n" +
-                "<h1 align=\"center\">" + title + "</h1>\n" +
-                "<ul>\n" +
-                "  <li><b>First Name</b>: "
-                + request.getParameter("first_name") + "\n" +
-                "  <li><b>Last Name</b>: "
-                + request.getParameter("last_name") + "\n" +
-                "</ul>\n" +
-				"<img src=\"mypicture.jpg\" alt=\"Some Picture\" height=\"42\" width=\"42\">"+
-					"</body></html>");
+	// write the image to a file
+	ImageIO.write(image, "jpeg", imageFile);
+         
+		
+    out.write("Received Post. File Name: " + imName + ", File Date: " + contents[0] + "_" + contents[1]);
   }
-
 }
+
+
+
