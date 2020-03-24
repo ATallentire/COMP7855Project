@@ -6,7 +6,7 @@ import java.util.*;
 public class DataTransfer {
 	
 	// SET ORACLE DB PASSWORD HERE
-	String password = "";
+	String password = "jonah1995";
 //	Connection con = null;
 //	Statement stmt = null;
 	public DataTransfer() {

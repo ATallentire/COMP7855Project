@@ -102,7 +102,7 @@ public class SearchServlet extends HttpServlet {
 		//Checking for any empty search fields that will ruin the search
 		if(caption.equals(""))
 			caption = null;
-		
+		System.out.println(caption);
 		if(startDate.equals(""))
 			startDate = "00010101_000001"; //Earliest date
 		
@@ -172,10 +172,10 @@ public class SearchServlet extends HttpServlet {
 				"<img id=\"myImg\" src=\"Images/" + photoData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoData[0]
 				"<b> " +  " </b>\n" + 
 				"<br />\n" +		
-				"Photo Caption: " + photoData[1] + "<br />\n" +
-				"Photo Date (yyyyMMdd_HHmmss): " + photoData[2] + "<br />\n" +
-				"Latitude: " + photoData[3] + "<br />\n" +
-				"Longitude: " + photoData[4] +
+				"<b> Photo Caption: </b>" + photoData[1] + "<br />\n" +
+				"<b>Photo Date (yyyyMMdd_HHmmss): </b>" + photoData[2] + "<br />\n" +
+				"<b>Latitude: </b>" + photoData[3] + "<br />\n" +
+				"<b>Longitude: </b>" + photoData[4] +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 

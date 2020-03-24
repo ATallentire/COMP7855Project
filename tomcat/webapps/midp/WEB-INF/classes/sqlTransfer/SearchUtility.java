@@ -25,7 +25,7 @@ public class SearchUtility {
 			Date maxDateD = new Date();
             String[] contents = data[2].split("_");
             try {
-                date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents[0] + "_" + contents[1]);
+                date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(data[2]);
 				minDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(minDate);
 				maxDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(maxDate);
             } catch (ParseException e) {}
@@ -39,7 +39,7 @@ public class SearchUtility {
             if (date.compareTo(minDateD) >= 0 && date.compareTo(maxDateD) <= 0 && dist <= searchDist) {
                 if (captionSearch == null) {
                     photoGallery.add(data);
-                } else if (data[2].matches("(.*)" + captionSearch + "(.*)")) {
+                } else if (data[1].matches("(.*)" + captionSearch + "(.*)")) {
                     photoGallery.add(data);
                 }
             }
