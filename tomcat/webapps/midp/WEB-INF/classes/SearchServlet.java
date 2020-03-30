@@ -14,8 +14,8 @@ import static java.lang.Math.sqrt;
 
 public class SearchServlet extends HttpServlet {
   
-	int imageCount = 0;
-	public static ArrayList<String[]> photoGallery = new ArrayList<String[]>();
+	int itemCount = 0;
+	public static ArrayList<String[]> itemGallery = new ArrayList<String[]>();
 	DataTransfer DB = new DataTransfer();
 	SearchUtility SU = new SearchUtility();
 	
@@ -25,7 +25,7 @@ public class SearchServlet extends HttpServlet {
       throws ServletException, IOException {
 		imageCount = 0;
     
-		String title = "Photo Gallery";
+		String title = "Search for Products";
 	
 	// Set response content type
       response.setContentType("text/html");
@@ -41,37 +41,33 @@ public class SearchServlet extends HttpServlet {
 			"<br />\n" +
 			"<br />\n" +	
 			
-			"<b> Caption </b>" +
+			"<b> Posting Title </b>" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"caption\" placeholder=\"Caption\">\n"   +
-			"<br />\n" +
-			"<br />\n" +
-
-			"<b> Time </b>" +
-			"<br />\n" +
-			"<input type=\"text\" name=\"startDate\" placeholder=\"Start Date\" /> <input type=\"text\" name=\"endDate\" placeholder=\"End Date\" />\n"   +
-			"<br />\n" +
-			"Format of time, yyyyMMdd_HHmmss" + 
+			"<input type=\"text\" name=\"itemTitle\" placeholder=\"Title\">\n"   +
 			"<br />\n" +
 			"<br />\n" +
 
-			"<b> Location </b>" +
+			"<b> Keywords </b>" +
 			"<br />\n" +
-			"Latitude: <input type=\"text\" name=\"lat\" value=\"49\" /> \n"  +
+			"<input type=\"text\" name=\"keyword1\" placeholder=\"First Keyword\" /> <input type=\"text\" name=\"keyword2\" placeholder=\"Second Keyword\" />\n"   +
 			"<br />\n" +
-			"Longitude: <input type=\"text\" name=\"lon\" value=\"120\" /> \n" +
+			"You do not need to fill both keywords" + 
 			"<br />\n" +
-			"Radius: <input type=\"text\" name=\"radius\" value=\"100000\" />\n" +
+			"<br />\n" +
+
+			"<b> Price Range </b>" +
+			"<br />\n" +
+			"Minimum Price $: <input type=\"text\" name=\"minPrice\" value=\"1\" /> \n"  +
+			"<br />\n" +
+			"Maximum Price $: <input type=\"text\" name=\"maxPrice\" value=\"10000\" /> \n" +
 			"<br />\n" +
 			"<br />\n" +				
 			
 			"<input type=\"submit\" value=\"Search Now\" />\n" +
 			
-			"<input type=\"button\" value=\"Upload from desktop\" onclick=\"location.href='http://localhost:8081/midp/select.html';\" />\n" +
+//			"<input type=\"button\" value=\"Upload from desktop\" onclick=\"location.href='http://localhost:8081/midp/select.html';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
-
-		request.setAttribute("Poster", "Search");
 
   }
   
@@ -85,49 +81,52 @@ public class SearchServlet extends HttpServlet {
 	
 	if (action == null) {
 		
-		String caption = request.getParameter("caption");
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
+		String itemTitle = request.getParameter("itemTitle");
+		String keyword1 = request.getParameter("keyword1");
+		String keyword2 = request.getParameter("keyword2");
+		String minPriceString = request.getParameter("minPrice");
+		String maxPriceString = request.getParameter("maxPrice");
 		
-		
-		double searchDist = 100000;
-		double lat = 49;
-		double lon = 120;
-		double[] searchLoc = new double[2];
-		
-		String latString = request.getParameter("lat");
-		String lonString = request.getParameter("lon");
-		String searchDistString = request.getParameter("radius");
+		double[] searchPrice = new double[2];
+		double minPrice = 1;
+		double maxPrice = 10000;
+		String[] keywords = new String[2];
 	
 		//Checking for any empty search fields that will ruin the search
-		if(caption.equals(""))
-			caption = null;
-		System.out.println(caption);
-		if(startDate.equals(""))
-			startDate = "00010101_000001"; //Earliest date
+		if(itemTitle.equals(""))
+			itemTitle = null;
+
+		if(keyword1.equals(""))
+			keyword1 = null;
 		
-		if(endDate.equals(""))
-			endDate = "22220101_000001"; //Real far away date
+		if(keyword2.equals(""))
+			keyword2 = null;
+
+		if(minPriceString.equals(""))
+			minPriceString = "1";
+		
+		if(maxPriceString.equals(""))
+			maxPriceString = "10000";
+
 	
 		try{
-		if(!latString.equals(null)){
-			lat = Double.parseDouble(latString);
-		}
+			if(!minPriceString.equals(null)){
+				minPrice = Double.parseDouble(minPriceString);
+			}
 
-		if(!lonString.equals(null)){
-			lon = Double.parseDouble(lonString);
-		}
-		if(!searchDistString.equals(null)){
-			searchDist = Double.parseDouble(searchDistString);
-		}
+			if(!maxPriceString.equals(null)){
+				maxPrice = Double.parseDouble(maxPriceString);
+			}
 		}
 		catch (Exception e) {}
 		
-		searchLoc[0] = lat;
-		searchLoc[1] = lon;
+		searchPrice[0] = minPrice;
+		searchPrice[1] = maxPrice;
+		keywords[0] = keyword1;
+		keywords[1] = keyword2;
 		
-		ArrayList<String[]> photoDetails = DB.ReadDB();
-		photoGallery = SU.searchFunc(startDate, endDate, caption, searchDist, searchLoc, photoDetails);
+		ArrayList<String[]> itemDetails = DB.ReadItemsDB();
+		itemGallery = SU.searchFunc(itemTitle, keywords, searchPrice, itemDetails);
 		imageCount = 0;
 	}
 	
@@ -140,17 +139,17 @@ public class SearchServlet extends HttpServlet {
 	
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
-	String title = "Searched Photo Gallery";
 
 	if ("Left".equals(action) && imageCount > 0) {
 		imageCount = imageCount - 1;
-	} else if ("Right".equals(action) && imageCount < (photoGallery.size() - 1)) {
+	} else if ("Right".equals(action) && imageCount < (itemGallery.size() - 1)) {
 		imageCount = imageCount + 1;
 	}
 
-	if(photoGallery.size() > 0){
-	try{
-			String[] photoData = photoGallery.get(imageCount);
+	if(itemGallery.size() > 0){
+		String[] itemData = itemGallery.get(imageCount);
+		String title = itemData[3];
+	try{		
 			String docType =
 			"<!doctype html public \"-//w3c//dtd html 4.0 " +
 			"transitional//en\">\n";
@@ -161,7 +160,7 @@ public class SearchServlet extends HttpServlet {
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/search\" method=\"POST\">\n" +
 				"<h1> " + title + " </h1>\n" + 
-				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + photoGallery.size() + " Photos" + "</h2>\n" + 
+				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + itemGallery.size() + " Items" + "</h2>\n" + 
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Left\" />\n" +   //DownCount
@@ -169,20 +168,16 @@ public class SearchServlet extends HttpServlet {
 				"<input type=\"submit\" name=\"action\" value=\"Right\" />\n" +   //UpCount
 				"<br />\n" +
 				"<br />\n" +
-				"<img id=\"myImg\" src=\"Images/" + photoData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoData[0]
+				"<img id=\"myImg\" src=\"Images/" + itemData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoData[0]
 				"<b> " +  " </b>\n" + 
 				"<br />\n" +		
-				"<b> Photo Caption: </b>" + photoData[1] + "<br />\n" +
-				"<b>Photo Date (yyyyMMdd_HHmmss): </b>" + photoData[2] + "<br />\n" +
-				"<b>Latitude: </b>" + photoData[3] + "<br />\n" +
-				"<b>Longitude: </b>" + photoData[4] +
+				"<b> Item Description: </b>" + itemData[4] + "<br />\n" +
+				"<b>Asking Price: </b>" + itemData[7] + "<br />\n" +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 
 		}
-		catch(Exception e){
-			//response.sendRedirect("http://localhost:8081/midp/search");
-		}
+		catch(Exception e){}
 	}
 	else{
 		String docType =
@@ -194,14 +189,14 @@ public class SearchServlet extends HttpServlet {
 				"<ul>\n" +
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/hits\" method=\"POST\">\n" +
-				"<h1> " + title + " </h1>\n" + 
-				"<h2 align=\"center\">" + "0"  + "/" + "0" + " Photos" + "</h2>\n" +
+				"<h1> " + No Items, Try Expanding Search + " </h1>\n" + 
+				"<h2 align=\"center\">" + "0"  + "/" + "0" + " Items" + "</h2>\n" +
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
-				"<b> " +  " </b>\n" + //photoGallery.get(imageCount)
+				"<b> " +  " </b>\n" +
 				
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");

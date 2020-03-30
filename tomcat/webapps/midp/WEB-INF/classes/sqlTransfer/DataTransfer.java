@@ -14,15 +14,24 @@ public class DataTransfer {
                     Class.forName("oracle.jdbc.OracleDriver");
 					Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 					DatabaseMetaData meta = con.getMetaData();
-					ResultSet tables = meta.getTables(null, null, "PHOTOS", null);
-					
+					ResultSet sellTable = meta.getTables(null, null, "SELLERS", null);
+
 					Statement stmt = con.createStatement();
-					if (!tables.next()) {
-						stmt.executeUpdate("CREATE TABLE photos (name char(30), caption char(30), imDate char(20), latitude char(10), longitude char(10))");
-						System.out.println("No Table, One has been created");
+					if (!sellTable.next()) {
+						stmt.executeUpdate("CREATE TABLE SELLERS (buyerID char(5), itemID char(30), imageName char(20), description char(100), filters char(30)), askPrice char(10), minPrice char(10)");
+						System.out.println("No Sell Table, One has been created");
                     }
 					else {
-						System.out.println("Table exists");
+						System.out.println("Sell Table exists");
+					}
+					
+					ResultSet tables = meta.getTables(null, null, "OFFERS", null);
+					if (!sellTable.next()) {
+						stmt.executeUpdate("CREATE TABLE OFFERS (itemID char(30), buyerID char(5), offerPrice char(10), counterPrice char(10))");
+						System.out.println("No Offers Table, One has been created");
+                    }
+					else {
+						System.out.println("Offers Table exists");
 					}
 					con.close();
 		}
@@ -68,7 +77,7 @@ public class DataTransfer {
 		}
 	}
 	
-	public ArrayList<String[]> ReadDB() {
+	public ArrayList<String[]> ReadItemsDB() {
 		ArrayList<String[]> allData = new ArrayList<String[]>();
 
 		Connection con = null;
