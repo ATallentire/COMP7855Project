@@ -26,11 +26,12 @@ public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private ServletFileUpload uploader = null;
 	private String imDir = "C:/COMP7855Project/tomcat/webapps/midp/Images";
-	String date = "";
-	String caption = "";
-	String latitude = "";
-	String longitude = "";
+	String kw1 = "";
+	String kw2 = "";
+	String price = "";
+	String minPrice = "";
 	String fileName = "";
+	String id ="";
 	DataTransfer DB = new DataTransfer();;
 	
 	@Override
@@ -98,17 +99,20 @@ public class UploadServlet extends HttpServlet {
 					String fieldname = fileItem.getFieldName();
 					String fieldvalue = fileItem.getString();
 					System.out.println(fieldname+"\n " +fieldvalue);
-					if(fieldname.equals("date")){
-						date = fieldvalue + "_000000";
+					if(fieldname.equals("kw1") && fieldvalue != null){
+						kw1 = fieldvalue;
 					}
-					else if(fieldname.equals("caption")){
-						caption = fieldvalue;
+					else if(fieldname.equals("kw2") && fieldvalue != null){
+						kw2 = fieldvalue;
 					}
-					else if(fieldname.equals("lat")){
-						latitude = fieldvalue;
+					else if(fieldname.equals("price")){
+						price = fieldvalue;
 					}
-					else if(fieldname.equals("long")){
-						longitude = fieldvalue;
+					else if(fieldname.equals("minPrice")){
+						minPrice = fieldvalue;
+					}
+					else if(fieldname.equals("id")){
+						id = fieldvalue;
 					}
 				}
 
@@ -120,27 +124,27 @@ public class UploadServlet extends HttpServlet {
 				
 				}
 			}
-			out.write("File "+fileName+ " uploaded successfully.");
+			out.write("Posting for user "+id+" created. File "+fileName+ " uploaded successfully.");
 			out.write(
 			"<html>\n" +
 			"<br />\n" +
 			"<br />\n" +
-			"  <li><b>Date</b>: "
-			+ date + "\n" +
-			"  <li><b>Caption</b>: "
-			+ caption + "\n" +	
-			"  <li><b>Latitude</b>: "
-			+ latitude + "\n" +
-			"  <li><b>Longitude</b>: "
-			+ longitude+ "\n" +
+			"  <li><b>Asking Price</b>: $"
+			+ price + "\n" +
+			"  <li><b>Minimum Price</b>: $"
+			+ minPrice + "\n" +	
+			"  <li><b>First Keyword</b>: "
+			+ kw1 + "\n" +
+			"  <li><b>Second Keyword</b>: "
+			+ kw2+ "\n" +
 			"<br />\n" +
 			"<br />\n" +
-			"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
+			"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/search?id="+id+"';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
 		//Upload to database
-		DB.WriteDB(fileName, caption, date, latitude, longitude);
+		//DB.WriteDB(fileName, kw1, kw2, price, minPrice, id);
 			
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file." + e);

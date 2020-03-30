@@ -25,11 +25,15 @@ public class HitServlet extends HttpServlet {
       PrintWriter out = response.getWriter();
       out.println("<html>\n" +
                 "<body>\n" + 
-                "<form action=\"/midp/search\" method=\"GET\">\n" +
-                "First Name: <input type=\"text\" name=\"first_name\" value=\"Grant\" />\n"   +
+				"<div align=\"center\" >\n" +
+                "<form action=\"/midp/home\" method=\"GET\">\n" +
+				"<h1> " + "Login with your ID" + " </h1>\n" +
+				"<br />\n" +
+				"<br />\n" +
+                "User ID: <input type=\"text\" name=\"id\" value=\"0000\" />\n"   +
                 "<br />\n" +
-                "Last Name: <input type=\"text\" name=\"last_name\" value=\"Howard\" />\n"   +
-                "<input type=\"submit\" value=\"Submit\" />\n"
+				"<br />\n" +
+                "<input type=\"submit\" value=\"Login\" />\n"
                 + 
                 "</form>\n</body>\n</html\n");
 
