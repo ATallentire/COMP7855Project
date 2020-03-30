@@ -24,19 +24,39 @@
     <servlet-class>SearchServlet</servlet-class>
   </servlet>
   
+  <servlet>
+    <servlet-name>Home</servlet-name>
+    <servlet-class>HomeServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>Posting</servlet-name>
+    <servlet-class>PostingServlet</servlet-class>
+  </servlet>
+  
+   <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>HitServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>Search</servlet-name>
     <url-pattern>/search</url-pattern>
   </servlet-mapping>
   
-  <servlet>
-    <servlet-name>Photos</servlet-name>
-    <servlet-class>HitServlet</servlet-class>
-  </servlet>
+  <servlet-mapping>
+    <servlet-name>Posting</servlet-name>
+    <url-pattern>/posting</url-pattern>
+  </servlet-mapping>
   
   <servlet-mapping>
-    <servlet-name>Photos</servlet-name>
-    <url-pattern>/hits</url-pattern>
+    <servlet-name>Home</servlet-name>
+    <url-pattern>/home</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Login</servlet-name>
+    <url-pattern>/login</url-pattern>
   </servlet-mapping>
   
 	<servlet-mapping>

@@ -24,10 +24,14 @@ public class SearchUtility {
 			Date minDateD = new Date();
 			Date maxDateD = new Date();
             String[] contents = data[2].split("_");
+			String[] contents1 = minDate.split("_");
+			String[] contents2 = maxDate.split("_");
             try {
-                date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(data[2]);
-				minDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(minDate);
-				maxDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(maxDate);
+                date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents[0] + "_" + contents[1]);
+				System.out.println("File Date: " + date);
+				minDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents1[0] + "_" + contents1[1]);
+				maxDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents2[0] + "_" + contents2[1]);
+				System.out.println(maxDateD);
             } catch (ParseException e) {}
 
             //Get Distance

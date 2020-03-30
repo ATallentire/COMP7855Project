@@ -18,13 +18,22 @@ public class SearchServlet extends HttpServlet {
 	public static ArrayList<String[]> itemGallery = new ArrayList<String[]>();
 	DataTransfer DB = new DataTransfer();
 	SearchUtility SU = new SearchUtility();
-	
+	String id = null;
 // Method to handle initial GET method request.
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-		imageCount = 0;
-    
+		itemCount = 0;
+		
+		Enumeration<String> parameterNames = request.getParameterNames();
+ 
+        /*while (parameterNames.hasMoreElements()) {
+ 
+            String paramName = parameterNames.nextElement();
+            System.out.println(paramName);
+		}*/
+		id = request.getParameter("id");
+		System.out.println("Search got ID: " + id);
 		String title = "Search for Products";
 	
 	// Set response content type
@@ -64,6 +73,7 @@ public class SearchServlet extends HttpServlet {
 			"<br />\n" +				
 			
 			"<input type=\"submit\" value=\"Search Now\" />\n" +
+			"	<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 			
 //			"<input type=\"button\" value=\"Upload from desktop\" onclick=\"location.href='http://localhost:8081/midp/select.html';\" />\n" +
 			"</div>\n</form>\n" +
@@ -126,8 +136,8 @@ public class SearchServlet extends HttpServlet {
 		keywords[1] = kw2;
 		
 		ArrayList<String[]> itemDetails = DB.ReadItemsDB();
-		itemGallery = SU.searchFunc(itemTitle, keywords, searchPrice, itemDetails);
-		imageCount = 0;
+		//itemGallery = SU.searchFunc(itemTitle, keywords, searchPrice, itemDetails);
+		itemCount = 0;
 	}
 	
 /*
@@ -140,14 +150,14 @@ public class SearchServlet extends HttpServlet {
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
 
-	if ("Left".equals(action) && imageCount > 0) {
-		imageCount = imageCount - 1;
-	} else if ("Right".equals(action) && imageCount < (itemGallery.size() - 1)) {
-		imageCount = imageCount + 1;
+	if ("Left".equals(action) && itemCount > 0) {
+		itemCount = itemCount - 1;
+	} else if ("Right".equals(action) && itemCount < (itemGallery.size() - 1)) {
+		itemCount = itemCount + 1;
 	}
 
 	if(itemGallery.size() > 0){
-		String[] itemData = itemGallery.get(imageCount);
+		String[] itemData = itemGallery.get(itemCount);
 		String title = itemData[3];
 	try{		
 			String docType =
@@ -160,7 +170,7 @@ public class SearchServlet extends HttpServlet {
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/search\" method=\"POST\">\n" +
 				"<h1> " + title + " </h1>\n" + 
-				"<h2 align=\"center\">" + (imageCount + 1)  + "/" + itemGallery.size() + " Items" + "</h2>\n" + 
+				"<h2 align=\"center\">" + (itemCount + 1)  + "/" + itemGallery.size() + " Items" + "</h2>\n" + 
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Left\" />\n" +   //DownCount
@@ -189,11 +199,11 @@ public class SearchServlet extends HttpServlet {
 				"<ul>\n" +
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/hits\" method=\"POST\">\n" +
-				"<h1> " + No Items, Try Expanding Search + " </h1>\n" + 
+				"<h1> " + "No Items, Try Expanding Search" + " </h1>\n" + 
 				"<h2 align=\"center\">" + "0"  + "/" + "0" + " Items" + "</h2>\n" +
 				"<br />\n" +		
 				"<br />\n" +
-				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
+				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search?id="+id+"';\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
 				"<b> " +  " </b>\n" +
