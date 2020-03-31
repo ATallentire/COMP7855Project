@@ -10,7 +10,7 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import sqlTransfer.DataTransfer;
 
-public class HomeServlet extends HttpServlet {
+public class ViewOffersServlet extends HttpServlet {
 String id;
   
   public void doGet(HttpServletRequest request,
@@ -18,30 +18,22 @@ String id;
       throws ServletException, IOException {
     // Set response content type
 	  id = (request.getParameter("id"));
-	  System.out.println("Home got ID: " + id);
       response.setContentType("text/html");
 
       PrintWriter out = response.getWriter();
       out.println("<html>\n" +
                 "<body>\n" + 
 				"<div align=\"center\" >\n" +
-                "<form action=\"/midp/search\" method=\"GET\">\n" +
-				"<h1> " + "Home Page" + " </h1>\n" +
-				"<br />\n" +
-				"<br />\n" +
+				"<h1> " + "Current Offers" + " </h1>\n" + 
 				"User ID: " + id + " \n" +
 				"<br />\n" +
 				"<br />\n" +
-			    "Buy " + " \n"   +
-                "<br />\n" +
-                "<input type=\"submit\" value=\"Go to Search Page\" />\n" +
-				"<input type=\"button\" value=\"View all Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"';\" />\n" +
+                "<form action=\"/midp/home\" method=\"GET\" >\n" +
 				"<br />\n" +
 				"<br />\n" +
-                "Sell " + " \n"   +
-                "<br />\n" +
-                "<input type=\"button\" value=\"Create Posting\" onclick=\"location.href='http://localhost:8081/midp/posting?id="+id+"';\" />\n" +
-				"<input type=\"button\" value=\"View all Postings\" onclick=\"location.href='http://localhost:8081/midp/viewpostings?id="+id+"';\"/>\n" +
+                "<input type=\"submit\" value=\"Back to Home Page\" />\n" +
+				"<br />\n" +
+				"<br />\n" +
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
                 "</form>\n</body>\n</html\n");
 

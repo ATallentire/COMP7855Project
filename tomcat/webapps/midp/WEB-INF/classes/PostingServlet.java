@@ -32,6 +32,10 @@ String id;
 				"Select Photo to Upload: <input type=\"file\" name=\"fileName\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
+				"Posting Title: <input type=\"text\" name=\"title\" />\n"   +
+                "<br />\n" +
+				"Posting Description (Max 100 characters): <input type=\"text\" name=\"description\" />\n"   +
+                "<br />\n" +
 			    "Asking Price: $<input type=\"text\" name=\"price\" />\n"   +
                 "<br />\n" +
 				"Minimum Price: $<input type=\"text\" name=\"minPrice\" />\n"   +
@@ -40,6 +44,7 @@ String id;
 				"<br />\n" +
 				"<br />\n" +
                 "<input type=\"submit\" value=\"Continue\" />\n" +
+				"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
