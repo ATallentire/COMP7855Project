@@ -25,13 +25,6 @@ public class SearchServlet extends HttpServlet {
       throws ServletException, IOException {
 		itemCount = 0;
 		
-		Enumeration<String> parameterNames = request.getParameterNames();
- 
-        /*while (parameterNames.hasMoreElements()) {
- 
-            String paramName = parameterNames.nextElement();
-            System.out.println(paramName);
-		}*/
 		id = request.getParameter("id");
 		System.out.println("Search got ID: " + id);
 		String title = "Search for Products";

@@ -34,6 +34,16 @@
     <servlet-class>PostingServlet</servlet-class>
   </servlet>
   
+  <servlet>
+    <servlet-name>ViewPostings</servlet-name>
+    <servlet-class>ViewPostingsServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>ViewOffers</servlet-name>
+    <servlet-class>ViewOffersServlet</servlet-class>
+  </servlet>
+  
    <servlet>
     <servlet-name>Login</servlet-name>
     <servlet-class>HitServlet</servlet-class>
@@ -42,6 +52,16 @@
   <servlet-mapping>
     <servlet-name>Search</servlet-name>
     <url-pattern>/search</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ViewPostings</servlet-name>
+    <url-pattern>/viewpostings</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ViewOffers</servlet-name>
+    <url-pattern>/viewoffers</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>

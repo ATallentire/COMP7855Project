@@ -13,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -32,6 +31,8 @@ public class UploadServlet extends HttpServlet {
 	String minPrice = "";
 	String fileName = "";
 	String id ="";
+	String description = "";
+	String title ="";
 	DataTransfer DB = new DataTransfer();;
 	
 	@Override
@@ -79,7 +80,6 @@ public class UploadServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.write("<html><head></head><body>");
 		
-
 		try {
 			List<FileItem> fileItemsList = uploader.parseRequest(request);
 			Iterator<FileItem> fileItemsIterator = fileItemsList.iterator();
@@ -106,13 +106,25 @@ public class UploadServlet extends HttpServlet {
 						kw2 = fieldvalue;
 					}
 					else if(fieldname.equals("price")){
-						price = fieldvalue;
+						if (fieldvalue == null || fieldvalue == "")
+							price = "0";
+						else
+							price = fieldvalue;
 					}
 					else if(fieldname.equals("minPrice")){
-						minPrice = fieldvalue;
+						if (fieldvalue == null || fieldvalue == "")
+							minPrice = "0";
+						else
+							minPrice = fieldvalue;
 					}
 					else if(fieldname.equals("id")){
 						id = fieldvalue;
+					}
+					else if(fieldname.equals("description")){
+						description = fieldvalue;
+					}
+					else if(fieldname.equals("title")){
+						title = fieldvalue;
 					}
 				}
 
@@ -129,6 +141,10 @@ public class UploadServlet extends HttpServlet {
 			"<html>\n" +
 			"<br />\n" +
 			"<br />\n" +
+			"  <li><b>Posting Title</b>: "
+			+ title + "\n" +
+			"  <li><b>Posting Description</b>: "
+			+ description + "\n" +
 			"  <li><b>Asking Price</b>: $"
 			+ price + "\n" +
 			"  <li><b>Minimum Price</b>: $"
@@ -136,15 +152,18 @@ public class UploadServlet extends HttpServlet {
 			"  <li><b>First Keyword</b>: "
 			+ kw1 + "\n" +
 			"  <li><b>Second Keyword</b>: "
-			+ kw2+ "\n" +
+			+ kw2 + "\n" +
 			"<br />\n" +
 			"<br />\n" +
-			"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
+			"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
+		// Get item ID
 		//Upload to database
 		//DB.WriteDB(fileName, kw1, kw2, price, minPrice, id);
+		/// Truncate description to 100 chars
+		// Truncate keywords to 30 characters
 			
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file." + e);
