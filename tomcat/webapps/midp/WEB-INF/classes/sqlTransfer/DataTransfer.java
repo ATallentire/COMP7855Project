@@ -20,7 +20,7 @@ public class DataTransfer {
 
 					Statement stmt = con.createStatement();
 					if (!sellTable.next()) {
-						stmt.executeUpdate("CREATE TABLE PRODUCTS (buyerID char(5), itemID char(5), title char(100) imageName char(30), description char(100), keyword1 char(30), keyword2 char(30), askPrice char(10), minPrice char(10)");
+						stmt.executeUpdate("CREATE TABLE PRODUCTS (buyerID char(5), itemID char(5), title char(100), imageName char(30), description char(100), keyword1 char(30), keyword2 char(30), askPrice char(10), minPrice char(10));");
 						System.out.println("No Product Table, One has been created");
                     }
 					else {
@@ -28,9 +28,9 @@ public class DataTransfer {
 					}
 					while(sellTable.next()){}
 					
-					ResultSet tables = meta.getTables(null, null, "OFFERS", null);
-					if (!sellTable.next()) {
-						stmt.executeUpdate("CREATE TABLE OFFERS (itemID char(5), buyerID char(5), offerPrice char(10), counterPrice char(10))");
+					ResultSet buyTable = meta.getTables(null, null, "OFFERS", null);
+					if (!buyTable.next()) {
+						stmt.executeUpdate("CREATE TABLE OFFERS (itemID char(5), buyerID char(5), offerPrice char(10), counterPrice char(10));");
 						System.out.println("No Offers Table, One has been created");
                     }
 					else {
