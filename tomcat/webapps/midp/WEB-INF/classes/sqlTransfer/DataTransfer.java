@@ -12,6 +12,7 @@ public class DataTransfer {
 	//Check if tables exist on startup
 	public DataTransfer() {
 		try {
+					System.out.println("DataTransfer Constructor");
                     Class.forName("oracle.jdbc.OracleDriver");
 					Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 					DatabaseMetaData meta = con.getMetaData();

@@ -33,7 +33,7 @@ public class UploadServlet extends HttpServlet {
 	String id ="";
 	String description = "";
 	String title ="";
-	DataTransfer DB = new DataTransfer();;
+	DataTransfer DB = new DataTransfer();
 	
 	@Override
 	public void init() throws ServletException{
@@ -88,17 +88,17 @@ public class UploadServlet extends HttpServlet {
 			while(fileItemsIterator.hasNext()){
 				FileItem fileItem = fileItemsIterator.next();
 				
-				System.out.println("FieldName="+fileItem.getFieldName());
+				/*System.out.println("FieldName="+fileItem.getFieldName());
 				System.out.println("FileName="+fileItem.getName());
 				System.out.println("ContentType="+fileItem.getContentType());
-				System.out.println("Size in bytes="+fileItem.getSize());
+				System.out.println("Size in bytes="+fileItem.getSize());*/
 				
 				if( fileItem.isFormField()){
-					System.out.println("FormField");
+					//System.out.println("FormField");
 					
 					String fieldname = fileItem.getFieldName();
 					String fieldvalue = fileItem.getString();
-					System.out.println(fieldname+"\n " +fieldvalue);
+					//System.out.println(fieldname+"\n " +fieldvalue);
 					if(fieldname.equals("kw1") && fieldvalue != null){
 						kw1 = fieldvalue;
 					}
@@ -136,9 +136,12 @@ public class UploadServlet extends HttpServlet {
 				
 				}
 			}
-			out.write("Posting for user "+id+" created. File "+fileName+ " uploaded successfully.");
 			out.write(
 			"<html>\n" +
+			"<h1> " + "Posting for user "+id+" created." + " </h1>\n" +
+			"<br />\n" +
+			"<br />\n" +
+			"File "+fileName+ " uploaded successfully." +
 			"<br />\n" +
 			"<br />\n" +
 			"  <li><b>Posting Title</b>: "
@@ -160,11 +163,18 @@ public class UploadServlet extends HttpServlet {
 			"</form>\n</body>\n</html>");
 
 		// Get item ID
-		//Upload to database
-		//DB.WriteDB(fileName, kw1, kw2, price, minPrice, id);
-		/// Truncate description to 100 chars
+		int itemID = DB.NumOfItems() + 1;
+				
+		// Truncate description to 100 chars
 		// Truncate keywords to 30 characters
-			
+		title = truncate(title, 100);
+		description = truncate(description, 100);
+		kw1 = truncate(kw1, 30);
+		kw2 = truncate(kw2, 30);
+		
+		//Upload to database
+		DB.WriteItemsDB(id, Integer.toString(itemID), title, fileName, description, kw1, kw2, price, minPrice);
+
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file." + e);
 		} catch (Exception e) {
@@ -172,5 +182,14 @@ public class UploadServlet extends HttpServlet {
 		}
 		out.write("</body></html>");
 	}
+	
+	public static String truncate(String value, int length) {
+        // Ensure String length is longer than requested size.
+        if (value.length() > length) {
+            return value.substring(0, length);
+        } else {
+            return value;
+        }
+    }
 
 }
