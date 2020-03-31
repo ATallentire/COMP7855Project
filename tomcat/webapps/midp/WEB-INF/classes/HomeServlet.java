@@ -18,6 +18,7 @@ String id;
       throws ServletException, IOException {
     // Set response content type
 	  id = (request.getParameter("id"));
+	  id = id.substring(0,5);
 	  System.out.println("Home got ID: " + id);
       response.setContentType("text/html");
 
