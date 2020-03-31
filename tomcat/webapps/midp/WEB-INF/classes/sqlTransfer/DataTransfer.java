@@ -26,6 +26,7 @@ public class DataTransfer {
 					else {
 						System.out.println("Product Table exists");
 					}
+					while(sellTable.next()){}
 					
 					ResultSet tables = meta.getTables(null, null, "OFFERS", null);
 					if (!sellTable.next()) {
@@ -258,7 +259,7 @@ public class DataTransfer {
 		return allData;
 	}
 	
-	//Retrieve all the offers made
+	//Retrieve all the offers made, or offers from a particular buyer, or offers on a particular item
 	public ArrayList<String[]> ReadOfferDB(String id, boolean buyer, boolean seller) {
 		ArrayList<String[]> allData = new ArrayList<String[]>();
 
