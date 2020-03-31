@@ -19,7 +19,7 @@ public class DataTransfer {
 
 					Statement stmt = con.createStatement();
 					if (!sellTable.next()) {
-						stmt.executeUpdate("CREATE TABLE PRODUCTS (buyerID char(5), itemID char(30), imageName char(20), description char(100), keyword1 char(30), keyword2 char(30), askPrice char(10), minPrice char(10)");
+						stmt.executeUpdate("CREATE TABLE PRODUCTS (buyerID char(5), itemID char(5), title char(100) imageName char(30), description char(100), keyword1 char(30), keyword2 char(30), askPrice char(10), minPrice char(10)");
 						System.out.println("No Product Table, One has been created");
                     }
 					else {
@@ -28,7 +28,7 @@ public class DataTransfer {
 					
 					ResultSet tables = meta.getTables(null, null, "OFFERS", null);
 					if (!sellTable.next()) {
-						stmt.executeUpdate("CREATE TABLE OFFERS (itemID char(30), buyerID char(5), offerPrice char(10), counterPrice char(10))");
+						stmt.executeUpdate("CREATE TABLE OFFERS (itemID char(5), buyerID char(5), offerPrice char(10), counterPrice char(10))");
 						System.out.println("No Offers Table, One has been created");
                     }
 					else {
@@ -40,24 +40,62 @@ public class DataTransfer {
 				  
 	}
 	
+	//Return the number of items currently in the Product table
+	public int NumOfItems(){
+		Connection con = null;
+		int itemNum = 0;
+		
+		try {
+			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
+			con.setAutoCommit(true);
+			Statement stmt = con.createStatement();
+			
+			ResultSet rs = stmt.executeQuery("SELECT count(*) FROM PRODUCTS");
+			rs.next();
+			itemNum = rs.getInt(1);
+			
+			stmt.close();
+			con.close();
+			}
+			catch(SQLException ex) {
+				try {
+					con.rollback();
+									con.close();
+				} catch (SQLException e) {
+					System.out.println("\nError Rolling back\n");	
+				} 
+				System.out.println("\n--- SQLException caught ---\n"); 
+				while (ex != null) { 
+					System.out.println("Message: " + ex.getMessage ()); 
+					System.out.println("SQLState: " + ex.getSQLState ()); 
+					System.out.println("ErrorCode: " + ex.getErrorCode ()); 
+					ex = ex.getNextException(); 
+					System.out.println("");
+				} 
+			}
+	
+		return itemNum;
+	}
+	
 	//A new product is being added, store it in the database
-	public void WriteItemsDB(String buyerID, String itemID, String imageName, String description, String kw1, String kw2, String askPrice, String minPrice) {
+	public void WriteItemsDB(String buyerID, String itemID, String title, String imageName, String description, String kw1, String kw2, String askPrice, String minPrice) {
 		Connection con = null;
 		try {
 		 con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 		con.setAutoCommit(false);
 		
 		//using Transactions
-        PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO PRODUCTS (buyerID, itemID, imageName, description, keyword1, keyword2, askPrice, minPrice) VALUES (?,?,?,?,?,?,?,?)");
+        PreparedStatement preparedStatement = con.prepareStatement("INSERT INTO PRODUCTS (buyerID, itemID, title, imageName, description, keyword1, keyword2, askPrice, minPrice) VALUES (?,?,?,?,?,?,?,?,?)");
 
         preparedStatement.setString(1, buyerID);
         preparedStatement.setString(2, itemID);
-		preparedStatement.setString(3, imageName);
-		preparedStatement.setString(4, description);
-		preparedStatement.setString(5, kw1);
-		preparedStatement.setString(6, kw2);
-		preparedStatement.setString(7, askPrice);
-		preparedStatement.setString(8, minPrice);
+		preparedStatement.setString(3, title);
+		preparedStatement.setString(4, imageName);
+		preparedStatement.setString(5, description);
+		preparedStatement.setString(6, kw1);
+		preparedStatement.setString(7, kw2);
+		preparedStatement.setString(8, askPrice);
+		preparedStatement.setString(9, minPrice);
         int row = preparedStatement.executeUpdate();
 		
 		con.commit();
@@ -130,7 +168,7 @@ public class DataTransfer {
 	}
 	
 	//Retrieve all data from the Product postings
-	public ArrayList<String[]> ReadItemsDB() {
+	public ArrayList<String[]> ReadItemsDB(String buyerID, boolean buyList) {
 		ArrayList<String[]> allData = new ArrayList<String[]>();
 
 		Connection con = null;
@@ -139,32 +177,63 @@ public class DataTransfer {
 			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCTS");
+			
+			//Return everything, passes to Search for buyers
+			if(!buyList) {
+				ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCTS");
+						
+						
+						//INSERT INTO PRODUCTS (buyerID, itemID, imageName, description, keyword1, keyword2, askPrice, minPrice)
+				while (rs.next()) {
+					String[] data = new String[8];
 					
+					data[0] = rs.getString("buyerID");
+
+					data[1] = rs.getString("itemID");
+
+					data[2] = rs.getString("imageName");
+
+					data[3] = rs.getString("description");
+
+					data[4] = rs.getString("keyword1");
+
+					data[5] = rs.getString("keyword2");
+
+					data[6] = rs.getString("askPrice");
+
+					data[7] = rs.getString("minPrice");
+
+					allData.add(data);
+					}
+			}
+			//Return only buyer items, for buyer product page
+			else {
+				String update = "SELECT * FROM PRODUCTS where BUYERID=" + buyerID;
+				 ResultSet rs = stmt.executeQuery(update);
+			
+				while (rs.next()) {
+					String[] data = new String[8];
 					
-					//INSERT INTO PRODUCTS (buyerID, itemID, imageName, description, keyword1, keyword2, askPrice, minPrice)
-			while (rs.next()) {
-				String[] data = new String[8];
-				
-				data[0] = rs.getString("buyerID");
+					data[0] = rs.getString("buyerID");
 
-				data[1] = rs.getString("itemID");
+					data[1] = rs.getString("itemID");
 
-				data[2] = rs.getString("imageName");
+					data[2] = rs.getString("imageName");
 
-				data[3] = rs.getString("description");
+					data[3] = rs.getString("description");
 
-				data[4] = rs.getString("keyword1");
+					data[4] = rs.getString("keyword1");
 
-				data[5] = rs.getString("keyword2");
+					data[5] = rs.getString("keyword2");
 
-				data[6] = rs.getString("askPrice");
+					data[6] = rs.getString("askPrice");
 
-				data[7] = rs.getString("minPrice");
+					data[7] = rs.getString("minPrice");
 
-				allData.add(data);
-				}
-					
+					allData.add(data);
+					}
+			}
+			
 			stmt.close();
 			con.close();
 			}
@@ -189,7 +258,7 @@ public class DataTransfer {
 	}
 	
 	//Retrieve all the offers made
-	public ArrayList<String[]> ReadOfferDB() {
+	public ArrayList<String[]> ReadOfferDB(String id, boolean buyer, boolean seller) {
 		ArrayList<String[]> allData = new ArrayList<String[]>();
 
 		Connection con = null;
@@ -198,16 +267,29 @@ public class DataTransfer {
 			con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM OFFERS");
-					
-					
+			String request = "";
+			
+			//Return all items a buyer has made offers on
+			if(buyer) {
+				request = "SELECT * FROM OFFERS where BUYERID=" + id;
+			}
+			//return all offers for a given seller's products
+			else if(seller) {
+				request = "SELECT * FROM OFFERS where ITEMID=" + id;
+			}
+			else {
+				request = "SELECT * FROM OFFERS";
+			}	
+			
+			
+			ResultSet rs = stmt.executeQuery(request);
 					//INSERT INTO OFFERS (itemID, buyerID, offerPrice, counterPrice)
 			while (rs.next()) {
 				String[] data = new String[4];
 				
-				data[0] = rs.getString("itemID");
+				data[0] = rs.getString("itemID"); //Universal item ID
 
-				data[1] = rs.getString("buyerID");
+				data[1] = rs.getString("buyerID"); //This is who is making an offer
 
 				data[2] = rs.getString("offerPrice");
 
@@ -215,7 +297,7 @@ public class DataTransfer {
 
 				allData.add(data);
 				}
-					
+	
 			stmt.close();
 			con.close();
 			}
