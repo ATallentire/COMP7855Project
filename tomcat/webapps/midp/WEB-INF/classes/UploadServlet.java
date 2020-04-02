@@ -136,6 +136,7 @@ public class UploadServlet extends HttpServlet {
 				
 				}
 			}
+			String itemID = Integer.toString(DB.NumOfItems() + 1);
 			out.write(
 			"<html>\n" +
 			"<h1> " + "Posting for user "+id+" created." + " </h1>\n" +
@@ -158,12 +159,16 @@ public class UploadServlet extends HttpServlet {
 			+ kw2 + "\n" +
 			"<br />\n" +
 			"<br />\n" +
+			"  <li><b>Item ID</b>: "
+			+ itemID + "\n" +
+			"<br />\n" +
+			"<br />\n" +
 			"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
 
 		// Get item ID
-		int itemID = DB.NumOfItems() + 1;
+		
 				
 		// Truncate description to 100 chars
 		// Truncate keywords to 30 characters
@@ -173,7 +178,7 @@ public class UploadServlet extends HttpServlet {
 		kw2 = truncate(kw2, 30);
 		
 		//Upload to database
-		DB.WriteItemsDB(id, Integer.toString(itemID), title, fileName, description, kw1, kw2, price, minPrice);
+		DB.WriteItemsDB(id, itemID, title, fileName, description, kw1, kw2, price, minPrice);
 
 		} catch (FileUploadException e) {
 			out.write("Exception in uploading file." + e);

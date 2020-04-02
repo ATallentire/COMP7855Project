@@ -17,12 +17,27 @@ String id;
       HttpServletResponse response)
       throws ServletException, IOException {
     // Set response content type
+	  PrintWriter out = response.getWriter();
 	  id = (request.getParameter("id"));
-	  id = id.substring(0,5);
-	  System.out.println("Home got ID: " + id);
+	  
+	  // Redirect to login page if no ID entered
+	  if (id.length() == 0){
+		out.println("<html>\n" +
+		"<meta http-equiv=\"Refresh\" content=\"0; url=http://localhost:8081/midp/login\" />\n" +
+		"</html\n");
+	  }
+	  // Check ID length, add leading 0's if too short
+	  else if(id.length() < 5){
+		  while(id.length() < 5){
+			  id = "0" + id;
+		  }
+	  }
+	  // Else truncate if too long
+	  else{
+		id = id.substring(0,5);
+	  }
       response.setContentType("text/html");
 
-      PrintWriter out = response.getWriter();
       out.println("<html>\n" +
                 "<body>\n" + 
 				"<div align=\"center\" >\n" +
@@ -42,8 +57,13 @@ String id;
                 "Sell " + " \n"   +
                 "<br />\n" +
                 "<input type=\"button\" value=\"Create Posting\" onclick=\"location.href='http://localhost:8081/midp/posting?id="+id+"';\" />\n" +
-				"<input type=\"button\" value=\"View all Postings\" onclick=\"location.href='http://localhost:8081/midp/viewpostings?id="+id+"';\"/>\n" +
+				"<input type=\"button\" value=\"View all Postings\" onclick=\"location.href='http://localhost:8081/midp/viewpostings?id="+id+"&action=view';\"/>\n" +
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
+				"<br />\n" +
+				"<br />\n" +
+				"<br />\n" +
+				"<br />\n" +
+				"<input type=\"button\" value=\"Logout\" onclick=\"location.href='http://localhost:8081/midp/login';\" />\n" +
                 "</form>\n</body>\n</html\n");
 
   }
