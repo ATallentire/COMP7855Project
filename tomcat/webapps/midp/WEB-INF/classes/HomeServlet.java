@@ -39,7 +39,7 @@ String id;
       response.setContentType("text/html");
 
       out.println("<html>\n" +
-                "<body>\n" + 
+                "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
                 "<form action=\"/midp/search\" method=\"GET\">\n" +
 				"<h1> " + "Home Page" + " </h1>\n" +
@@ -51,7 +51,7 @@ String id;
 			    "Buy " + " \n"   +
                 "<br />\n" +
                 "<input type=\"submit\" value=\"Go to Search Page\" />\n" +
-				"<input type=\"button\" value=\"View all Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"';\" />\n" +
+				"<input type=\"button\" value=\"View all Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=buy';\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
                 "Sell " + " \n"   +

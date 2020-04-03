@@ -24,7 +24,7 @@ public class HitServlet extends HttpServlet {
 
       PrintWriter out = response.getWriter();
       out.println("<html>\n" +
-                "<body>\n" + 
+                "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
                 "<form action=\"/midp/home\" method=\"GET\">\n" +
 				"<h1> " + "Login with your 5 digit ID" + " </h1>\n" +

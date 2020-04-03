@@ -22,7 +22,7 @@ public class ViewPostingsServlet extends HttpServlet {
     // Set response content type
 	  id = (request.getParameter("id"));
 	  action = request.getParameter("action");
-	  ArrayList<String[]> postings = DB.ReadItemsDB(id, true);
+	  ArrayList<String[]> postings = DB.ReadItemsDB(id, true, false);
 		  
 	  if (action.equals("view")){
 		  itemNum = 1;
@@ -34,13 +34,18 @@ public class ViewPostingsServlet extends HttpServlet {
 		  itemNum += 1;
 	  }
 	  
+	  
+		  
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
 	  
 	  if (postings.size() != 0){
 	  String[] postDetails = postings.get(itemNum - 1);
+	  
+	  ArrayList<String[]> offers = DB.ReadOfferDB(postDetails[1], false, true);
+	  
       out.println("<html>\n" +
-                "<body>\n" + 
+                "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/viewpostings\" method=\"GET\" >\n" +
 				"<h1> " + "Current Postings" + " </h1>\n" + 
@@ -64,9 +69,16 @@ public class ViewPostingsServlet extends HttpServlet {
 				"<br />\n" +
 				"<b> Keywords: </b>" + postDetails[5] + "&nbsp;&nbsp;" + postDetails[6] + "\n" +
 				"<br />\n" +
-				"<br />\n" +
-				"<br />\n" +
-				"<br />\n" +
+				"<br />\n");
+				if (offers.size() == 0){
+					out.println("<b> No Offers Yet </b>" + "\n");
+				}
+				else{
+					out.println("<b> Offers Pending on Item: </b>" + "\n" +
+					"<input type=\"button\" value=\"View Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=sell&itemID="+postDetails[1]+"';\" />\n");
+				}
+				
+				out.println("<br />\n" +
                 "<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
@@ -75,7 +87,7 @@ public class ViewPostingsServlet extends HttpServlet {
 	  }
 	  else{
 		  out.println("<html>\n" +
-                "<body>\n" + 
+                "<body bgcolor=\"#d9d9d9\">\n" + 
 				"<div align=\"center\" >\n" +
 				"<form action=\"/midp/viewpostings\" method=\"GET\" >\n" +
 				"<h1> " + "Current Postings" + " </h1>\n" + 

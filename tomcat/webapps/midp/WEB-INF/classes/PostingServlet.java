@@ -22,7 +22,7 @@ String id;
 
       PrintWriter out = response.getWriter();
       out.println("<html>\n" +
-                "<body>\n" + 
+                "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
 				"<h1> " + "Enter Posting Information" + " </h1>\n" + 
 				"User ID: " + id + " \n" +

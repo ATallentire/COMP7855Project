@@ -32,7 +32,7 @@ public class MakeOfferServlet extends HttpServlet {
 	  
 	  if(id.equals(poster)){
 		  out.println("<html>\n" +
-					"<body>\n" + 
+					"<body bgcolor=\"#d9d9d9\">\n" +
 					"<div align=\"center\" >\n" +
 					"<h1> " + "You can't make an offer on your own item!" + "</h1>\n" + 
 					"<br />\n" +
@@ -45,8 +45,9 @@ public class MakeOfferServlet extends HttpServlet {
 	  }
 	  else{
 		  out.println("<html>\n" +
-					"<body>\n" + 
+					"<body bgcolor=\"#d9d9d9\">\n" +
 					"<div align=\"center\" >\n" +
+					"<form action=\"/midp/makeoffer\" method=\"POST\" >\n" +
 					"<h1> " + "Make an offer on " + title + " </h1>\n" + 
 					"<br />\n" +
 					"<br />\n" +
@@ -57,8 +58,7 @@ public class MakeOfferServlet extends HttpServlet {
 					"<b> Item Number: </b>" + itemID + " \n" +
 					"<br />\n" +
 					"<br />\n" +
-					"<b> Your Offer: </b>$ <input type=\"text\" name=\"offer\" placeholder=\"Enter Amount\">\n"   +
-					"<form action=\"/midp/makeoffer\" method=\"POST\" >\n" +
+					"<b> Your Offer: </b>$ <input type=\"text\" name=\"offer\" placeholder=\"Enter Amount\">\n"   +					
 					"<br />\n" +
 					"<input type=\"submit\" value=\"Continue\" />\n" +
 					"<br />\n" +
@@ -68,6 +68,7 @@ public class MakeOfferServlet extends HttpServlet {
 					"<br />\n" +
 					"<br />\n" +
 					"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
+					"<input type=\"hidden\" name=\"itemID\" value="+itemID+" />\n" +
 					"</form>\n</body>\n</html\n");
 	  }
 
@@ -76,12 +77,33 @@ public class MakeOfferServlet extends HttpServlet {
   public void doPost(HttpServletRequest request,
                      HttpServletResponse response)
       throws ServletException, IOException {
-
+	
+	id = request.getParameter("id");
+	itemID = request.getParameter("itemID");
+	price = request.getParameter("offer");
 	DataTransfer DB = new DataTransfer();
+	ArrayList<String[]> item = DB.ReadItemsDB(itemID, false, true);
+	String[] itemData = item.get(0);
+	String minPrice = itemData[8];
+	
+	if(Integer.parseInt(price) > Integer.parseInt(minPrice)){
+		DB.WriteOfferDB(itemID, id, price, "0", "Pending", false);
+	}
+	else{
+		DB.WriteOfferDB(itemID, id, price, "0", "Declined", false);
+	}
 	
     PrintWriter out = response.getWriter();
-	/// HANDLE IMAGE HERE
-    response.setContentType("text");
+    response.setContentType("text/html");
+	 out.println("<html>\n" +
+					"<body bgcolor=\"#d9d9d9\">\n" +
+					"<div align=\"center\" >\n" +
+					"<h1> " + "Offer sumbitted on " + title + " </h1>\n" + 
+					"<br />\n" +
+					"<br />\n" +
+					"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
+					"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/search?id="+id+"';\" />\n" +
+					"</form>\n</body>\n</html\n");
 
 	
   }

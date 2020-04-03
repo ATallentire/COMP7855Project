@@ -139,6 +139,7 @@ public class UploadServlet extends HttpServlet {
 			String itemID = Integer.toString(DB.NumOfItems() + 1);
 			out.write(
 			"<html>\n" +
+			"<body bgcolor=\"#d9d9d9\">\n" +
 			"<h1> " + "Posting for user "+id+" created." + " </h1>\n" +
 			"<br />\n" +
 			"<br />\n" +

@@ -129,7 +129,7 @@ public class SearchServlet extends HttpServlet {
 		keywords[0] = kw1;
 		keywords[1] = kw2;
 		
-		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false);
+		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false, false);
 		//itemGallery = SU.searchFunc(itemTitle, keywords, searchPrice, itemDetails);
 		// Until Search util fully implemented, show all items
 		itemGallery = itemDetails;
