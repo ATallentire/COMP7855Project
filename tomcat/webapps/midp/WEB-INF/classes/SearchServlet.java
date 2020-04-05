@@ -45,7 +45,7 @@ public class SearchServlet extends HttpServlet {
 			
 			"<b> Posting Title </b>" +
 			"<br />\n" +
-			"<input type=\"text\" name=\"itemTitle\" placeholder=\"Title\">\n"   +
+			"<input type=\"text\" name=\"titleSearch\" placeholder=\"Title\">\n"   +
 			"<br />\n" +
 			"<br />\n" +
 
@@ -84,7 +84,7 @@ public class SearchServlet extends HttpServlet {
 	
 	if (action == null) {
 		
-		String itemTitle = request.getParameter("itemTitle");
+		String titleSearch = request.getParameter("titleSearch");
 		String kw1 = request.getParameter("kw1");
 		String kw2 = request.getParameter("kw2");
 		String minPriceString = request.getParameter("minPrice");
@@ -96,8 +96,8 @@ public class SearchServlet extends HttpServlet {
 		String[] keywords = new String[2];
 	
 		//Checking for any empty search fields that will ruin the search
-		if(itemTitle.equals(""))
-			itemTitle = null;
+		if(titleSearch.equals(""))
+			titleSearch = null;
 
 		if(kw1.equals(""))
 			kw1 = null;
@@ -113,11 +113,11 @@ public class SearchServlet extends HttpServlet {
 
 	
 		try{
-			if(!minPriceString.equals(null)){
+			if(minPriceString != null){
 				minPrice = Double.parseDouble(minPriceString);
 			}
 
-			if(!maxPriceString.equals(null)){
+			if(maxPriceString != null){
 				maxPrice = Double.parseDouble(maxPriceString);
 			}
 		}
@@ -128,8 +128,8 @@ public class SearchServlet extends HttpServlet {
 		keywords[0] = kw1;
 		keywords[1] = kw2;
 		
-		ArrayList<String[]> itemDetails = DB.ReadItemsDB();
-		//itemGallery = SU.searchFunc(itemTitle, keywords, searchPrice, itemDetails);
+		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false);
+		itemGallery = SU.searchFunc(titleSearch, keywords, searchPrice, itemDetails);
 		itemCount = 0;
 	}
 	

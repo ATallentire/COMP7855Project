@@ -1,71 +1,118 @@
 package sqlTransfer;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
+
 
 public class SearchUtility {
 
 	//This function takes the search criteria and all photo data and finds matches between the two
 	//Must Pass searchDist and searchLoc as doubles, everything else is a string
 
-    public static ArrayList<String[]> searchFunc(String minDate, String maxDate, String captionSearch,
-    double searchDist, double[] searchLoc, ArrayList<String[]> photoDetails) {
-
-        ArrayList<String[]> photoGallery = new ArrayList<String[]>();
-
-        for (int i = 0; i < photoDetails.size(); i++) {
+    public static ArrayList<String[]> searchFunc(String titleSearch, String[] keywords, double[] searchPrice, ArrayList<String[]> itemDetails) {
+		System.out.println("Entered Search Func");
+		
+        ArrayList<String[]> itemGallery = new ArrayList<String[]>();
+		int keyCheck = 0;
+		try{
+		//keyCheck: 0 = no keywords, 1 = keyword[0], 2 = keyword[1], 3 = both
+		if(keywords[0] == null) {
+			if(keywords[1] != null)
+				keyCheck = 2;
+		}
+		else {
+			if(keywords[1] != null)
+				keyCheck = 3;
+			else
+				keyCheck = 1;
+		}
+		}
+		catch(Exception ex) {
+			System.out.println("Failed: " + ex);}
+			
+		System.out.println("Passed KeyCheck");
+		
+        for (int i = 0; i < itemDetails.size(); i++) {
 
 			//data: 0 image name. 1 caption, 2 date, 3 lat, 4 lon
-            String[] data = photoDetails.get(i);
+			String[] data = new String[8];
+            data = itemDetails.get(i);
+			
+/*
+					data[0] = rs.getString("buyerID");
 
-            //Get date
-            Date date = new Date();
-			Date minDateD = new Date();
-			Date maxDateD = new Date();
-            String[] contents = data[2].split("_");
-			String[] contents1 = minDate.split("_");
-			String[] contents2 = maxDate.split("_");
-            try {
-                date = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents[0] + "_" + contents[1]);
-				System.out.println("File Date: " + date);
-				minDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents1[0] + "_" + contents1[1]);
-				maxDateD = new SimpleDateFormat("yyyyMMdd_HHmmss").parse(contents2[0] + "_" + contents2[1]);
-				System.out.println(maxDateD);
-            } catch (ParseException e) {}
+					data[1] = rs.getString("itemID");
 
-            //Get Distance
-            double[] loc = new double[2];
-            loc[0] = Double.parseDouble(data[3]);
-            loc[1] = Double.parseDouble(data[4]);
-            double dist = getDist(loc, searchLoc);
+					data[2] = rs.getString("imageName");
 
-            if (date.compareTo(minDateD) >= 0 && date.compareTo(maxDateD) <= 0 && dist <= searchDist) {
-                if (captionSearch == null) {
-                    photoGallery.add(data);
-                } else if (data[1].matches("(.*)" + captionSearch + "(.*)")) {
-                    photoGallery.add(data);
-                }
+					data[3] = rs.getString("description");
+
+					data[4] = rs.getString("keyword1");
+
+					data[5] = rs.getString("keyword2");
+
+					data[6] = rs.getString("askPrice");
+
+					data[7] = rs.getString("minPrice");
+*/
+			String desc = data[3];
+			String kw1 = data[4];
+			String kw2 = data[5];
+			String askPrice = data[6];
+			double price = 0;
+			
+			try{
+				price = Double.parseDouble(askPrice);
+			}
+			catch (Exception e) {}
+
+			//searchPrice[0] = min, 1 = max
+            if (price >= searchPrice[0] && price <= searchPrice[1]) {
+				
+                if (keyword_match(keywords, kw1, kw2, keyCheck)) {
+					if(titleSearch == null)
+						itemGallery.add(data);
+					
+                    else if(desc.matches("(.*)" + titleSearch + "(.*)"))
+						itemGallery.add(data);
+				}
+             
             }
         }
 
-        return photoGallery;
+        return itemGallery;
     }
 
-    public static double getDist(double[] loc1, double[] loc2){
-        // Radius of Earth in km
-        int R = 6371;
-        // Get lat/long of points, convert to radians
-        double lat1 = loc1[0] * Math.PI/180;
-        double lat2 = loc2[0] * Math.PI/180;
-        double long1 = loc1[1] * Math.PI/180;
-        double long2 = loc2[1] * Math.PI/180;
-        // Calculate angular difference
-        double dLong= long1 - long2;
-        double dLat = lat1 - lat2;
-
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1) * Math.cos(lat2) *
-                Math.sin(dLong/2) * Math.sin(dLong/2);
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    public static boolean keyword_match(String[] keywords, String kw1, String kw2, int keyID){
+		//Check if either of the search keywords are null, and/or if either of the item keywords are null
+		//Pass if they are both null, if the one not null matches, or if both matches when neither are null
+		//fail if there is a failed match with a non-null value
+		if(kw1 == null)
+			kw1 = "";
+		if(kw2 == null)
+			kw2 = "";
+		
+		switch(keyID)
+		{
+			case 0:
+				return true;
+			case 1:
+				if(kw1.matches(keywords[0]) || kw2.matches(keywords[0]))
+					return true;
+				else
+					return false;
+			case 2:
+				if(kw1.matches(keywords[1]) || kw2.matches(keywords[1]))
+					return true;
+				else
+					return false;
+			case 3:
+				if((kw1.matches(keywords[0]) || kw2.matches(keywords[0])) && (kw1.matches(keywords[1]) || kw2.matches(keywords[1])))
+					return true;
+				else
+					return false;
+			default:
+			return false;
+		}
     }
 }
