@@ -189,27 +189,28 @@ public class DataTransfer {
 			//Return everything, passes to Search for buyers
 			if(!buyList) {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCTS");
-						
-						
+								
 						//INSERT INTO PRODUCTS (buyerID, itemID, imageName, description, keyword1, keyword2, askPrice, minPrice)
 				while (rs.next()) {
-					String[] data = new String[8];
+					String[] data = new String[9];
 					
 					data[0] = rs.getString("buyerID");
 
 					data[1] = rs.getString("itemID");
+					
+					data[2] = rs.getString("title");
 
-					data[2] = rs.getString("imageName");
+					data[3] = rs.getString("imageName");
 
-					data[3] = rs.getString("description");
+					data[4] = rs.getString("description");
 
-					data[4] = rs.getString("keyword1");
+					data[5] = rs.getString("keyword1");
 
-					data[5] = rs.getString("keyword2");
+					data[6] = rs.getString("keyword2");
 
-					data[6] = rs.getString("askPrice");
+					data[7] = rs.getString("askPrice");
 
-					data[7] = rs.getString("minPrice");
+					data[8] = rs.getString("minPrice");
 
 					allData.add(data);
 					}
@@ -220,23 +221,25 @@ public class DataTransfer {
 				 ResultSet rs = stmt.executeQuery(update);
 			
 				while (rs.next()) {
-					String[] data = new String[8];
+					String[] data = new String[9];
 					
 					data[0] = rs.getString("buyerID");
 
 					data[1] = rs.getString("itemID");
+					
+					data[2] = rs.getString("title");
 
-					data[2] = rs.getString("imageName");
+					data[3] = rs.getString("imageName");
 
-					data[3] = rs.getString("description");
+					data[4] = rs.getString("description");
 
-					data[4] = rs.getString("keyword1");
+					data[5] = rs.getString("keyword1");
 
-					data[5] = rs.getString("keyword2");
+					data[6] = rs.getString("keyword2");
 
-					data[6] = rs.getString("askPrice");
+					data[7] = rs.getString("askPrice");
 
-					data[7] = rs.getString("minPrice");
+					data[8] = rs.getString("minPrice");
 
 					allData.add(data);
 					}

@@ -35,30 +35,13 @@ public class SearchUtility {
         for (int i = 0; i < itemDetails.size(); i++) {
 
 			//data: 0 image name. 1 caption, 2 date, 3 lat, 4 lon
-			String[] data = new String[8];
+			String[] data = new String[9];
             data = itemDetails.get(i);
 			
-/*
-					data[0] = rs.getString("buyerID");
-
-					data[1] = rs.getString("itemID");
-
-					data[2] = rs.getString("imageName");
-
-					data[3] = rs.getString("description");
-
-					data[4] = rs.getString("keyword1");
-
-					data[5] = rs.getString("keyword2");
-
-					data[6] = rs.getString("askPrice");
-
-					data[7] = rs.getString("minPrice");
-*/
-			String desc = data[3];
-			String kw1 = data[4];
-			String kw2 = data[5];
-			String askPrice = data[6];
+			String title = data[3];
+			String kw1 = data[5];
+			String kw2 = data[6];
+			String askPrice = data[7];
 			double price = 0;
 			
 			try{
@@ -73,7 +56,7 @@ public class SearchUtility {
 					if(titleSearch == null)
 						itemGallery.add(data);
 					
-                    else if(desc.matches("(.*)" + titleSearch + "(.*)"))
+                    else if(title.matches("(.*)" + titleSearch + "(.*)"))
 						itemGallery.add(data);
 				}
              
