@@ -218,8 +218,7 @@ public class DataTransfer {
 			//Return everything, passes to Search for buyers
 			else if(!buyList) {
 				ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCTS");
-						
-						
+								
 						//INSERT INTO PRODUCTS (buyerID, itemID, imageName, description, keyword1, keyword2, askPrice, minPrice)
 				while (rs.next()) {
 					String[] data = new String[9];
