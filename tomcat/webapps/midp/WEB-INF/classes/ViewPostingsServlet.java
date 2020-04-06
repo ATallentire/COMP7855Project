@@ -43,7 +43,18 @@ public class ViewPostingsServlet extends HttpServlet {
 	  String[] postDetails = postings.get(itemNum - 1);
 	  
 	  ArrayList<String[]> offers = DB.ReadOfferDB(postDetails[1], false, true);
-	  
+	  String[] offerDetails;
+	  boolean sold = false;
+	  boolean pending = false;
+	  for (int i=0;i<offers.size();i++){
+		offerDetails = offers.get(i);
+		if(offerDetails[4].equals("Pending")){
+			pending = true;
+		}
+		else if(offerDetails[4].equals("Accepted")){
+			sold = true;
+		}
+	  }
       out.println("<html>\n" +
                 "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
@@ -70,14 +81,18 @@ public class ViewPostingsServlet extends HttpServlet {
 				"<b> Keywords: </b>" + postDetails[5] + "&nbsp;&nbsp;" + postDetails[6] + "\n" +
 				"<br />\n" +
 				"<br />\n");
-				if (offers.size() == 0){
-					out.println("<b> No Offers Yet </b>" + "\n");
+
+				if (sold){
+					out.println("<b> You have accepted an offer on this item. </b>" + "\n" +
+					"<input type=\"button\" value=\"View Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=sell&itemID="+postDetails[1]+"';\" />\n");
 				}
-				else{
+				else if (pending){
 					out.println("<b> Offers Pending on Item: </b>" + "\n" +
 					"<input type=\"button\" value=\"View Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=sell&itemID="+postDetails[1]+"';\" />\n");
 				}
-				
+				else {
+					out.println("<b> No Offers Yet </b>" + "\n");
+				}							
 				out.println("<br />\n" +
                 "<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 				"<br />\n" +

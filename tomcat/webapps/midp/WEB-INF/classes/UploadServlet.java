@@ -32,7 +32,7 @@ public class UploadServlet extends HttpServlet {
 	String fileName = "";
 	String id ="";
 	String description = "";
-	String title ="";
+	String title ="Post Title";
 	DataTransfer DB = new DataTransfer();
 	
 	@Override
@@ -123,7 +123,7 @@ public class UploadServlet extends HttpServlet {
 					else if(fieldname.equals("description")){
 						description = fieldvalue;
 					}
-					else if(fieldname.equals("title")){
+					else if(fieldname.equals("title") && fieldvalue != null && fieldvalue != ""){
 						title = fieldvalue;
 					}
 				}

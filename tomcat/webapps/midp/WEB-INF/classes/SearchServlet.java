@@ -61,7 +61,7 @@ public class SearchServlet extends HttpServlet {
 			"<br />\n" +
 			"Minimum Price $: <input type=\"text\" name=\"minPrice\" value=\"1\" /> \n"  +
 			"<br />\n" +
-			"Maximum Price $: <input type=\"text\" name=\"maxPrice\" value=\"10000\" /> \n" +
+			"Maximum Price $: <input type=\"text\" name=\"maxPrice\" value=\"100000\" /> \n" +
 			"<br />\n" +
 			"<br />\n" +				
 			
@@ -110,7 +110,7 @@ public class SearchServlet extends HttpServlet {
 			minPriceString = "1";
 		
 		if(maxPriceString.equals(""))
-			maxPriceString = "10000";
+			maxPriceString = "100000";
 
 	
 		try{
@@ -131,7 +131,6 @@ public class SearchServlet extends HttpServlet {
 		
 		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false, false);
 		itemGallery = SU.searchFunc(titleSearch, keywords, searchPrice, itemDetails);
-
 		itemCount = 0;
 	}
 	
@@ -153,7 +152,24 @@ public class SearchServlet extends HttpServlet {
 
 	if(itemGallery.size() > 0){
 		String[] itemData = itemGallery.get(itemCount);
+		
 		String title = itemData[2];
+		
+		ArrayList<String[]> offers = DB.ReadOfferDB(itemData[1], false, true);
+		String[] offerDetails;
+		boolean hasOffers = true;
+		boolean sold = false;
+		
+		if (offers.size() == 0){
+			hasOffers = false;
+		}
+		else{
+			for (int i=0;i<offers.size();i++){
+				offerDetails = offers.get(i);
+				if(offerDetails[4].equals("Accepted"))
+					sold = true;
+			}
+		}
 	try{		
 			String docType =
 			"<!doctype html public \"-//w3c//dtd html 4.0 " +
@@ -178,10 +194,28 @@ public class SearchServlet extends HttpServlet {
 				"<br />\n" +		
 				"<b> Item Description: </b>" + itemData[4] + "<br />\n" +
 				"<b>Asking Price: </b>$" + itemData[7] + "<br />\n" +
+				"<b> Keywords: </b>" + itemData[5] + "&nbsp;&nbsp;" + itemData[6] + "\n"+
 				"<br />\n" +
-				"<br />\n" +
-				"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n" +
-				"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
+				"<br />\n");
+				
+				if(!sold && !hasOffers){
+					out.println(
+					"<b>Status: </b> Available - No offers yet \n" +
+					"<br />\n" +
+					"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n");
+				}
+				else if(!sold){
+					out.println(
+					"<b>Status: </b> Available - Pending offers on item \n" +
+					"<br />\n" +
+					"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n");
+				}
+				else{
+					out.println(
+					"<b>Status: </b> Sold! \n" +
+					"<br />\n");
+				}
+				out.println("<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		

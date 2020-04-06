@@ -51,13 +51,13 @@ String id;
 			    "Buy " + " \n"   +
                 "<br />\n" +
                 "<input type=\"submit\" value=\"Go to Search Page\" />\n" +
-				"<input type=\"button\" value=\"View all Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=buy';\" />\n" +
+				"<input type=\"button\" value=\"View Your Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=buy';\" />\n" +
 				"<br />\n" +
 				"<br />\n" +
                 "Sell " + " \n"   +
                 "<br />\n" +
                 "<input type=\"button\" value=\"Create Posting\" onclick=\"location.href='http://localhost:8081/midp/posting?id="+id+"';\" />\n" +
-				"<input type=\"button\" value=\"View all Postings\" onclick=\"location.href='http://localhost:8081/midp/viewpostings?id="+id+"&action=view';\"/>\n" +
+				"<input type=\"button\" value=\"View Your Postings\" onclick=\"location.href='http://localhost:8081/midp/viewpostings?id="+id+"&action=view';\"/>\n" +
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
 				"<br />\n" +
 				"<br />\n" +

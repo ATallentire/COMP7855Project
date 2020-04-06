@@ -55,10 +55,10 @@ public class SearchUtility {
 
 					data[7] = rs.getString("minPrice");
 */
-			String desc = data[3];
-			String kw1 = data[4];
-			String kw2 = data[5];
-			String askPrice = data[6];
+			String desc = data[4];
+			String kw1 = data[5];
+			String kw2 = data[6];
+			String askPrice = data[7];
 			double price = 0;
 			
 			try{
