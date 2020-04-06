@@ -26,7 +26,7 @@ public class SearchServlet extends HttpServlet {
 		itemCount = 0;
 		
 		id = request.getParameter("id");
-		System.out.println("Search got ID: " + id);
+		//System.out.println("Search got ID: " + id);
 		String title = "Search for Products";
 	
 	// Set response content type
@@ -66,8 +66,8 @@ public class SearchServlet extends HttpServlet {
 			"<br />\n" +				
 			
 			"<input type=\"submit\" value=\"Search Now\" />\n" +
-			"	<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
-			
+			"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
+			"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
 //			"<input type=\"button\" value=\"Upload from desktop\" onclick=\"location.href='http://localhost:8081/midp/select.html';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
@@ -89,6 +89,7 @@ public class SearchServlet extends HttpServlet {
 		String kw2 = request.getParameter("kw2");
 		String minPriceString = request.getParameter("minPrice");
 		String maxPriceString = request.getParameter("maxPrice");
+		String id = request.getParameter("id");
 		
 		double[] searchPrice = new double[2];
 		double minPrice = 1;
@@ -128,8 +129,9 @@ public class SearchServlet extends HttpServlet {
 		keywords[0] = kw1;
 		keywords[1] = kw2;
 		
-		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false);
+		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false, false);
 		itemGallery = SU.searchFunc(titleSearch, keywords, searchPrice, itemDetails);
+
 		itemCount = 0;
 	}
 	
@@ -151,7 +153,7 @@ public class SearchServlet extends HttpServlet {
 
 	if(itemGallery.size() > 0){
 		String[] itemData = itemGallery.get(itemCount);
-		String title = itemData[3];
+		String title = itemData[2];
 	try{		
 			String docType =
 			"<!doctype html public \"-//w3c//dtd html 4.0 " +
@@ -167,15 +169,20 @@ public class SearchServlet extends HttpServlet {
 				"<br />\n" +		
 				"<br />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Left\" />\n" +   //DownCount
-				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search';\" />\n" +
+				"<input type=\"button\" value=\"Search Again\" onclick=\"location.href='http://localhost:8081/midp/search?id="+id+"';\" />\n" +
 				"<input type=\"submit\" name=\"action\" value=\"Right\" />\n" +   //UpCount
 				"<br />\n" +
 				"<br />\n" +
-				"<img id=\"myImg\" src=\"Images/" + itemData[0] + "\"" + "width=\"640\" height=\"480\">\n\n" + //photoData[0]
+				"<img id=\"myImg\" src=\"Images/" + itemData[3] + "\"" + "height=\"480\">\n\n" + //photoData[0]
 				"<b> " +  " </b>\n" + 
 				"<br />\n" +		
 				"<b> Item Description: </b>" + itemData[4] + "<br />\n" +
-				"<b>Asking Price: </b>" + itemData[7] + "<br />\n" +
+				"<b>Asking Price: </b>$" + itemData[7] + "<br />\n" +
+				"<br />\n" +
+				"<br />\n" +
+				"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n" +
+				"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
+				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
 
@@ -200,7 +207,7 @@ public class SearchServlet extends HttpServlet {
 				"<br />\n" +
 				"<br />\n" +
 				"<b> " +  " </b>\n" +
-				
+				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");
 	}

@@ -44,14 +44,29 @@
     <servlet-class>ViewOffersServlet</servlet-class>
   </servlet>
   
-   <servlet>
+  <servlet>
+    <servlet-name>MakeOffer</servlet-name>
+    <servlet-class>MakeOfferServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
     <servlet-name>Login</servlet-name>
     <servlet-class>HitServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>Update</servlet-name>
+    <servlet-class>UpdateOfferServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>Search</servlet-name>
     <url-pattern>/search</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Update</servlet-name>
+    <url-pattern>/update</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
@@ -62,6 +77,11 @@
   <servlet-mapping>
     <servlet-name>ViewOffers</servlet-name>
     <url-pattern>/viewoffers</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>MakeOffer</servlet-name>
+    <url-pattern>/makeoffer</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>
