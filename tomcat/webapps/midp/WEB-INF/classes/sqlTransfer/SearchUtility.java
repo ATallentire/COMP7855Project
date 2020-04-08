@@ -16,16 +16,16 @@ public class SearchUtility {
 		int keyCheck = 0;
 		try{
 		//keyCheck: 0 = no keywords, 1 = keyword[0], 2 = keyword[1], 3 = both
-		if(keywords[0] == null) {
-			if(keywords[1] != null)
-				keyCheck = 2;
-		}
-		else {
-			if(keywords[1] != null)
-				keyCheck = 3;
-			else
-				keyCheck = 1;
-		}
+			if(keywords[0] == null) {
+				if(keywords[1] != null)
+					keyCheck = 2;
+			}
+			else {
+				if(keywords[1] != null)
+					keyCheck = 3;
+				else
+					keyCheck = 1;
+			}
 		}
 		catch(Exception ex) {
 			System.out.println("Failed: " + ex);}
@@ -34,26 +34,11 @@ public class SearchUtility {
 		
         for (int i = 0; i < itemDetails.size(); i++) {
 
-			//data: 0 image name. 1 caption, 2 date, 3 lat, 4 lon
+
 			String[] data = new String[9];
             data = itemDetails.get(i);
-/*
-					data[0] = rs.getString("buyerID");
-
-					data[1] = rs.getString("itemID");
-
-					data[2] = rs.getString("imageName");
-
-					data[3] = rs.getString("description");
-
-					data[4] = rs.getString("keyword1");
-
-					data[5] = rs.getString("keyword2");
-
-					data[6] = rs.getString("askPrice");
-
-					data[7] = rs.getString("minPrice");
-*/
+			
+			// Parse string array to get infromation
 			String desc = data[4];
 			String title = data[2];
 			String kw1 = data[5];
@@ -79,7 +64,7 @@ public class SearchUtility {
              
             }
         }
-
+		// Return filtered list
         return itemGallery;
     }
 

@@ -16,14 +16,17 @@ public class ViewPostingsServlet extends HttpServlet {
 	int itemNum = 1;
 	DataTransfer DB = new DataTransfer();
 	
-  public void doGet(HttpServletRequest request,
+    public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    // Set response content type
+      // Set response content type
 	  id = (request.getParameter("id"));
 	  action = request.getParameter("action");
+	  
+	  // Retrieve all postings for current user id
 	  ArrayList<String[]> postings = DB.ReadItemsDB(id, true, false);
-		  
+	  
+	  // Determine action
 	  if (action.equals("view")){
 		  itemNum = 1;
 	  }
@@ -33,19 +36,21 @@ public class ViewPostingsServlet extends HttpServlet {
 	  else if (action.equals("Right") && itemNum < postings.size()){
 		  itemNum += 1;
 	  }
-	  
-	  
-		  
+	  	  
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
 	  
+	  // Checking postings not empty
 	  if (postings.size() != 0){
 	  String[] postDetails = postings.get(itemNum - 1);
 	  
+	  // Get all offers on current item
 	  ArrayList<String[]> offers = DB.ReadOfferDB(postDetails[1], false, true);
 	  String[] offerDetails;
 	  boolean sold = false;
 	  boolean pending = false;
+	  
+	  // Determine offer state
 	  for (int i=0;i<offers.size();i++){
 		offerDetails = offers.get(i);
 		if(offerDetails[4].equals("Pending")){
@@ -55,6 +60,7 @@ public class ViewPostingsServlet extends HttpServlet {
 			sold = true;
 		}
 	  }
+	  // Send html code to display current posting
       out.println("<html>\n" +
                 "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
@@ -82,6 +88,7 @@ public class ViewPostingsServlet extends HttpServlet {
 				"<br />\n" +
 				"<br />\n");
 
+				// Display status and button based on offer state
 				if (sold){
 					out.println("<b> You have accepted an offer on this item. </b>" + "\n" +
 					"<input type=\"button\" value=\"View Offers\" onclick=\"location.href='http://localhost:8081/midp/viewoffers?id="+id+"&action=view&source=sell&itemID="+postDetails[1]+"';\" />\n");
@@ -100,6 +107,7 @@ public class ViewPostingsServlet extends HttpServlet {
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
                 "</form>\n</body>\n</html\n");
 	  }
+	  // Else show no postings page
 	  else{
 		  out.println("<html>\n" +
                 "<body bgcolor=\"#d9d9d9\">\n" + 
@@ -125,11 +133,8 @@ public class ViewPostingsServlet extends HttpServlet {
   public void doPost(HttpServletRequest request,
                      HttpServletResponse response)
       throws ServletException, IOException {
-
-	DataTransfer DB = new DataTransfer();
 	
     PrintWriter out = response.getWriter();
-	/// HANDLE IMAGE HERE
     response.setContentType("text");
 
 	

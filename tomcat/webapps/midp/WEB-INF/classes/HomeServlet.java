@@ -38,6 +38,7 @@ String id;
 	  }
       response.setContentType("text/html");
 
+	  // Send html code to show homepage
       out.println("<html>\n" +
                 "<body bgcolor=\"#d9d9d9\">\n" +
 				"<div align=\"center\" >\n" +
@@ -72,10 +73,7 @@ String id;
                      HttpServletResponse response)
       throws ServletException, IOException {
 
-	DataTransfer DB = new DataTransfer();
-	
     PrintWriter out = response.getWriter();
-	/// HANDLE IMAGE HERE
     response.setContentType("text");
 
 	

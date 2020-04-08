@@ -42,6 +42,7 @@ public class UploadServlet extends HttpServlet {
 		fileFactory.setRepository(filesDir);
 		this.uploader = new ServletFileUpload(fileFactory);
 	}
+	// Get method allows download from server
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String fileName = request.getParameter("fileName");
 		if(fileName == null || fileName.equals("")){
@@ -71,6 +72,7 @@ public class UploadServlet extends HttpServlet {
 		System.out.println("File downloaded at client successfully");
 	}
 
+	// Post method allows upload to server from desktop
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/*if(!ServletFileUpload.isMultipartContent(request)){
 			throw new ServletException("Content type is not multipart/form-data");
@@ -88,17 +90,9 @@ public class UploadServlet extends HttpServlet {
 			while(fileItemsIterator.hasNext()){
 				FileItem fileItem = fileItemsIterator.next();
 				
-				/*System.out.println("FieldName="+fileItem.getFieldName());
-				System.out.println("FileName="+fileItem.getName());
-				System.out.println("ContentType="+fileItem.getContentType());
-				System.out.println("Size in bytes="+fileItem.getSize());*/
-				
 				if( fileItem.isFormField()){
-					//System.out.println("FormField");
-					
 					String fieldname = fileItem.getFieldName();
 					String fieldvalue = fileItem.getString();
-					//System.out.println(fieldname+"\n " +fieldvalue);
 					if(fieldname.equals("kw1") && fieldvalue != null){
 						kw1 = fieldvalue;
 					}
@@ -136,6 +130,7 @@ public class UploadServlet extends HttpServlet {
 				
 				}
 			}
+			// Output confirmation page
 			String itemID = Integer.toString(DB.NumOfItems() + 1);
 			out.write(
 			"<html>\n" +
@@ -167,10 +162,7 @@ public class UploadServlet extends HttpServlet {
 			"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 			"</div>\n</form>\n" +
 			"</form>\n</body>\n</html>");
-
-		// Get item ID
-		
-				
+	
 		// Truncate description to 100 chars
 		// Truncate keywords to 30 characters
 		title = truncate(title, 100);
@@ -178,7 +170,7 @@ public class UploadServlet extends HttpServlet {
 		kw1 = truncate(kw1, 30);
 		kw2 = truncate(kw2, 30);
 		
-		//Upload to database
+		//Upload new item to database
 		DB.WriteItemsDB(id, itemID, title, fileName, description, kw1, kw2, price, minPrice);
 
 		} catch (FileUploadException e) {

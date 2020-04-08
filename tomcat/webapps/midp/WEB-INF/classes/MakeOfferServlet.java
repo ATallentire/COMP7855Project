@@ -30,6 +30,7 @@ public class MakeOfferServlet extends HttpServlet {
 	
       PrintWriter out = response.getWriter();
 	  
+	  // Prevent posting on your own items
 	  if(id.equals(poster)){
 		  out.println("<html>\n" +
 					"<body bgcolor=\"#d9d9d9\">\n" +
@@ -43,6 +44,7 @@ public class MakeOfferServlet extends HttpServlet {
 					"<input type=\"button\" value=\"Back to Search\" onclick=\"location.href='http://localhost:8081/midp/search?id="+id+"';\" />\n" +
 					"</form>\n</body>\n</html\n");
 	  }
+	  // Send html to display make offer page
 	  else{
 		  out.println("<html>\n" +
 					"<body bgcolor=\"#d9d9d9\">\n" +
@@ -86,13 +88,15 @@ public class MakeOfferServlet extends HttpServlet {
 	String[] itemData = item.get(0);
 	String minPrice = itemData[8];
 	
+	// Write post to database - check that offer is over minimum price
 	if(Integer.parseInt(price) > Integer.parseInt(minPrice)){
 		DB.WriteOfferDB(itemID, id, price, "0", "Pending", false);
 	}
+	// Automatically decline if too low
 	else{
-		DB.WriteOfferDB(itemID, id, price, "0", "Declined", false);
+		DB.WriteOfferDB(itemID, id, price, "0", "Declined - Too Low", false);
 	}
-	
+	// Send html code to confirm offer submission 
     PrintWriter out = response.getWriter();
     response.setContentType("text/html");
 	 out.println("<html>\n" +

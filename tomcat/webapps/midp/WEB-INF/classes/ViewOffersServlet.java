@@ -20,14 +20,17 @@ public class ViewOffersServlet extends HttpServlet {
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    // Set response content type
+      // Set response content type
 	  id = (request.getParameter("id"));
 	  action = request.getParameter("action");
 	  source = request.getParameter("source");
 	  
+	  // Determine source of get request (buyer or seller)
 	  if (source.equals("buy")){
+		  // Read all offers for userID
 		  ArrayList<String[]> offers = DB.ReadOfferDB(id, true, false);
 		  
+		  // Determine action
 		  if (action.equals("view")){
 			  itemNum = 1;
 		  }
@@ -41,12 +44,15 @@ public class ViewOffersServlet extends HttpServlet {
 		  response.setContentType("text/html");
 		  PrintWriter out = response.getWriter();
 		  
+		  // Check offers not empty
 		  if (offers.size() != 0){
 		  String[] offerDetails = offers.get(itemNum - 1);
 		  
 		  String itemID = offerDetails[0];
+		  // Read item data and store in string array
 		  ArrayList<String[]> posts = DB.ReadItemsDB(itemID, false, true);
 		  String[] postDetails = posts.get(0);
+		  // Send html code to display current offer webpage
 		  out.println("<html>\n" +
 					"<body bgcolor=\"#d9d9d9\">\n" +
 					"<div align=\"center\" >\n" +
@@ -82,6 +88,7 @@ public class ViewOffersServlet extends HttpServlet {
 					"<input type=\"hidden\" name=\"source\" value=buy />\n" +
 					"</form>\n</body>\n</html\n");
 		  }
+		  // Else show no offers found page
 		  else{
 			  out.println("<html>\n" +
 					"<body>\n" + 
@@ -104,11 +111,21 @@ public class ViewOffersServlet extends HttpServlet {
 					"</form>\n</body>\n</html\n");
 		  }
 	  }
-	  
+	  // If source is sell
 	  else if (source.equals("sell")){
 		  String itemID = request.getParameter("itemID");
-		  ArrayList<String[]> offers = DB.ReadOfferDB(itemID, false, true);
+		  ArrayList<String[]> allOffers = DB.ReadOfferDB(itemID, false, true);
+		  ArrayList<String[]> offers = new ArrayList<String[]>();
+		  String[] tempOffer;
 		  
+		  // Filter offers that are below minimum
+		  for (int i = 0; i< allOffers.size(); i++){
+			  tempOffer = allOffers.get(i);
+			  if(!(tempOffer[4].equals("Declined - Too Low"))){
+				  offers.add(tempOffer);
+			  }
+		  }
+		  // Determine action
 		  if (action.equals("view")){
 			  itemNum = 1;
 		  }
@@ -121,11 +138,14 @@ public class ViewOffersServlet extends HttpServlet {
 		  
 		  response.setContentType("text/html");
 		  PrintWriter out = response.getWriter();
+		  // Get details of current offer
 		  String[] offerDetails = offers.get(itemNum - 1);
+		  // If offer is pending
 		  if (offerDetails[4].equals("Pending")){
-			  
+			  // Read details for current item
 			  ArrayList<String[]> posts = DB.ReadItemsDB(itemID, false, true);
 			  String[] postDetails = posts.get(0);
+			  // Send html code to display current offer and product
 			  out.println("<html>\n" +
 						"<body bgcolor=\"#d9d9d9\">\n" +
 						"<div align=\"center\" >\n" +
@@ -162,6 +182,7 @@ public class ViewOffersServlet extends HttpServlet {
 						"</form>\n</body>\n</html\n");
 
 	  }
+	  // If offer was declined
 	  else if (offerDetails[4].equals("Declined")){
 		  ArrayList<String[]> posts = DB.ReadItemsDB(itemID, false, true);
 			  String[] postDetails = posts.get(0);
@@ -199,7 +220,7 @@ public class ViewOffersServlet extends HttpServlet {
 						"<input type=\"hidden\" name=\"itemID\" value="+itemID+" />\n" +
 						"</form>\n</body>\n</html\n");
 	  }
-	  
+		  // If offer was accepted
 	  	  else if (offerDetails[4].equals("Accepted")){
 		  ArrayList<String[]> posts = DB.ReadItemsDB(itemID, false, true);
 			  String[] postDetails = posts.get(0);
@@ -244,10 +265,7 @@ public class ViewOffersServlet extends HttpServlet {
                      HttpServletResponse response)
       throws ServletException, IOException {
 
-	DataTransfer DB = new DataTransfer();
-	
     PrintWriter out = response.getWriter();
-	/// HANDLE IMAGE HERE
     response.setContentType("text");
 
 	
