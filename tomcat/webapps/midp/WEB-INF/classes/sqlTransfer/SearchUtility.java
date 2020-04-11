@@ -10,7 +10,7 @@ public class SearchUtility {
 	//Must Pass searchDist and searchLoc as doubles, everything else is a string
 
     public static ArrayList<String[]> searchFunc(String titleSearch, String[] keywords, double[] searchPrice, ArrayList<String[]> itemDetails) {
-		System.out.println("Entered Search Func");
+		//System.out.println("Entered Search Func");
 		
         ArrayList<String[]> itemGallery = new ArrayList<String[]>();
 		int keyCheck = 0;
@@ -30,15 +30,14 @@ public class SearchUtility {
 		catch(Exception ex) {
 			System.out.println("Failed: " + ex);}
 			
-		System.out.println("Passed KeyCheck");
+		//System.out.println("Passed KeyCheck");
 		
         for (int i = 0; i < itemDetails.size(); i++) {
 
-			//data: 0 image name. 1 caption, 2 date, 3 lat, 4 lon
 			String[] data = new String[9];
             data = itemDetails.get(i);
 			
-			String title = data[3];
+			String title = data[2];
 			String kw1 = data[5];
 			String kw2 = data[6];
 			String askPrice = data[7];
@@ -62,7 +61,8 @@ public class SearchUtility {
              
             }
         }
-
+		
+		//System.out.println("Exiting Search Utility");
         return itemGallery;
     }
 

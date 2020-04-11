@@ -8,3 +8,6 @@ cd C:\COMP7855Project\tomcat\webapps\midp\WEB-INF\classes
 javac -classpath .;C:\COMP7855Project\tomcat\lib\servlet-api.jar HitServlet.java
 
 javac -classpath .;C:\COMP7855Project\tomcat\lib\servlet-api.jar -classpath .;C:\COMP7855Project\tomcat\lib\ojdbc6.jar HitServlet.java
+
+For Junit testing
+javac -classpath .;C:\COMP7855Project\tomcat\lib\junit-4.10.jar
