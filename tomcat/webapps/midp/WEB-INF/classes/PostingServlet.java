@@ -16,10 +16,12 @@ String id;
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
-    // Set response content type
+	  // Set response content type
 	  id = (request.getParameter("id"));
       response.setContentType("text/html");
-
+		
+	  // Send html code to show posting upload page
+	  // On submit data is sent to upload servlet in post request
       PrintWriter out = response.getWriter();
       out.println("<html>\n" +
                 "<body bgcolor=\"#d9d9d9\">\n" +
@@ -55,11 +57,8 @@ String id;
   public void doPost(HttpServletRequest request,
                      HttpServletResponse response)
       throws ServletException, IOException {
-
-	DataTransfer DB = new DataTransfer();
 	
     PrintWriter out = response.getWriter();
-	/// HANDLE IMAGE HERE
     response.setContentType("text");
 
 	

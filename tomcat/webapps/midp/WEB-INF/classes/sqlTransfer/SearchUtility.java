@@ -16,16 +16,16 @@ public class SearchUtility {
 		int keyCheck = 0;
 		try{
 		//keyCheck: 0 = no keywords, 1 = keyword[0], 2 = keyword[1], 3 = both
-		if(keywords[0] == null) {
-			if(keywords[1] != null)
-				keyCheck = 2;
-		}
-		else {
-			if(keywords[1] != null)
-				keyCheck = 3;
-			else
-				keyCheck = 1;
-		}
+			if(keywords[0] == null) {
+				if(keywords[1] != null)
+					keyCheck = 2;
+			}
+			else {
+				if(keywords[1] != null)
+					keyCheck = 3;
+				else
+					keyCheck = 1;
+			}
 		}
 		catch(Exception ex) {
 			System.out.println("Failed: " + ex);}
@@ -61,8 +61,12 @@ public class SearchUtility {
              
             }
         }
+<<<<<<< HEAD
 		
 		//System.out.println("Exiting Search Utility");
+=======
+		// Return filtered list
+>>>>>>> 9eec893137f6afc7b97416ebb4f55e12db337bc5
         return itemGallery;
     }
 

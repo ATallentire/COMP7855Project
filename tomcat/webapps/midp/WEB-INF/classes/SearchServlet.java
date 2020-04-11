@@ -19,19 +19,19 @@ public class SearchServlet extends HttpServlet {
 	DataTransfer DB = new DataTransfer();
 	SearchUtility SU = new SearchUtility();
 	String id = null;
-// Method to handle initial GET method request.
+  // Method to handle initial GET method request.
   public void doGet(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
 		itemCount = 0;
 		
 		id = request.getParameter("id");
-		//System.out.println("Search got ID: " + id);
 		String title = "Search for Products";
 	
 	// Set response content type
       response.setContentType("text/html");
-
+	// Send HTML code. This page allows user to enter search info.
+	// Searching will execute post request.
       PrintWriter out = response.getWriter();
       out.println(
 			"<html>\n" +			
@@ -61,7 +61,7 @@ public class SearchServlet extends HttpServlet {
 			"<br />\n" +
 			"Minimum Price $: <input type=\"text\" name=\"minPrice\" value=\"1\" /> \n"  +
 			"<br />\n" +
-			"Maximum Price $: <input type=\"text\" name=\"maxPrice\" value=\"10000\" /> \n" +
+			"Maximum Price $: <input type=\"text\" name=\"maxPrice\" value=\"100000\" /> \n" +
 			"<br />\n" +
 			"<br />\n" +				
 			
@@ -75,7 +75,7 @@ public class SearchServlet extends HttpServlet {
   }
   
   
-// Method to handle POST method request.
+// Method to handle POST method request from search button.
   public void doPost(HttpServletRequest request,
                      HttpServletResponse response)
       throws ServletException, IOException {
@@ -84,6 +84,7 @@ public class SearchServlet extends HttpServlet {
 	
 	if (action == null) {
 		
+		// Get search parameters
 		String titleSearch = request.getParameter("titleSearch");
 		String kw1 = request.getParameter("kw1");
 		String kw2 = request.getParameter("kw2");
@@ -110,9 +111,9 @@ public class SearchServlet extends HttpServlet {
 			minPriceString = "1";
 		
 		if(maxPriceString.equals(""))
-			maxPriceString = "10000";
-
+			maxPriceString = "100000";
 	
+		// Parse strings and convert to numeric data
 		try{
 			if(minPriceString != null){
 				minPrice = Double.parseDouble(minPriceString);
@@ -129,31 +130,47 @@ public class SearchServlet extends HttpServlet {
 		keywords[0] = kw1;
 		keywords[1] = kw2;
 		
+		// Read all items from database
 		ArrayList<String[]> itemDetails = DB.ReadItemsDB("", false, false);
+		// Search all items with search parameters
 		itemGallery = SU.searchFunc(titleSearch, keywords, searchPrice, itemDetails);
-
 		itemCount = 0;
 	}
 	
-/*
-	int Count;
-	File file = new File("C:/COMP7855Project/tomcat/webapps/midp/Images");
-	String[] imageList = file.list();
-*/		
-
 	
 	PrintWriter out = response.getWriter();
 	response.setContentType("text/html");
-
+	
+	// Select action based on button pressed
 	if ("Left".equals(action) && itemCount > 0) {
 		itemCount = itemCount - 1;
 	} else if ("Right".equals(action) && itemCount < (itemGallery.size() - 1)) {
 		itemCount = itemCount + 1;
 	}
 
+	// Get current item
 	if(itemGallery.size() > 0){
 		String[] itemData = itemGallery.get(itemCount);
+		
 		String title = itemData[2];
+		
+		// Read offers on current item and determine status
+		ArrayList<String[]> offers = DB.ReadOfferDB(itemData[1], false, true);
+		String[] offerDetails;
+		boolean hasOffers = true;
+		boolean sold = false;
+		
+		if (offers.size() == 0){
+			hasOffers = false;
+		}
+		else{
+			for (int i=0;i<offers.size();i++){
+				offerDetails = offers.get(i);
+				if(offerDetails[4].equals("Accepted"))
+					sold = true;
+			}
+		}
+	// Send html code to show item information
 	try{		
 			String docType =
 			"<!doctype html public \"-//w3c//dtd html 4.0 " +
@@ -178,10 +195,29 @@ public class SearchServlet extends HttpServlet {
 				"<br />\n" +		
 				"<b> Item Description: </b>" + itemData[4] + "<br />\n" +
 				"<b>Asking Price: </b>$" + itemData[7] + "<br />\n" +
+				"<b> Keywords: </b>" + itemData[5] + "&nbsp;&nbsp;" + itemData[6] + "\n"+
 				"<br />\n" +
-				"<br />\n" +
-				"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n" +
-				"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
+				"<br />\n");
+				
+				// Set status section based on offer state
+				if(!sold && !hasOffers){
+					out.println(
+					"<b>Status: </b> Available - No offers yet \n" +
+					"<br />\n" +
+					"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n");
+				}
+				else if(!sold){
+					out.println(
+					"<b>Status: </b> Available - Offers on item \n" +
+					"<br />\n" +
+					"<input type=\"button\" value=\"Make an Offer\" onclick=\"location.href='http://localhost:8081/midp/makeoffer?id="+id+"&itemID="+itemData[1]+"&poster="+itemData[0]+"&title="+title+"&price="+itemData[7]+"';\" />\n");
+				}
+				else{
+					out.println(
+					"<b>Status: </b> Sold! \n" +
+					"<br />\n");
+				}
+				out.println("<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 				"<input type=\"hidden\" name=\"id\" value="+id+" />\n" +
 				"</div>\n</form>\n" +
 				"</form>\n</body>\n</html>");		
@@ -189,6 +225,7 @@ public class SearchServlet extends HttpServlet {
 		}
 		catch(Exception e){}
 	}
+	// Show no items found page
 	else{
 		String docType =
 			"<!doctype html public \"-//w3c//dtd html 4.0 " +

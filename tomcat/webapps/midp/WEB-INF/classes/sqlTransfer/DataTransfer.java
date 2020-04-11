@@ -34,7 +34,7 @@ public class DataTransfer {
 					ResultSet tables = soMeta.getTables(null, null, "OFFERS", null);
 					Statement stmt2 = con.createStatement();
 					if (!tables.next()) {
-						stmt2.executeUpdate("CREATE TABLE OFFERS (itemID varchar(5), buyerID varchar(5), offerPrice varchar(10), counterPrice varchar(10), status varchar(10))");
+						stmt2.executeUpdate("CREATE TABLE OFFERS (itemID varchar(5), buyerID varchar(5), offerPrice varchar(10), counterPrice varchar(10), status varchar(20))");
 						System.out.println("No Offers Table, One has been created");
                     }
 					else {

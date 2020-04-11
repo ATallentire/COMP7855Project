@@ -30,6 +30,7 @@ public class UpdateOfferServlet extends HttpServlet {
 	
       PrintWriter out = response.getWriter();
 	  
+	  // If offer accepted - show confirmation
 	  if(status.equals("Accepted")){
 		  DB.WriteOfferDB(itemID, buyer, price,"0", "Accepted", true);
 		  out.println("<html>\n" +
@@ -44,7 +45,7 @@ public class UpdateOfferServlet extends HttpServlet {
 					"<input type=\"button\" value=\"Back to Home Page\" onclick=\"location.href='http://localhost:8081/midp/home?id="+id+"';\" />\n" +
 					"</form>\n</body>\n</html\n");
 	  }
-	  
+	  // If offer declined - show confirmation
 	  else if(status.equals("Declined")){
 		  DB.WriteOfferDB(itemID, buyer, price, "0", "Declined", true);
 		  out.println("<html>\n" +
