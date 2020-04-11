@@ -6,8 +6,8 @@ import java.util.*;
 public class DataTransfer {
 	
 	// SET ORACLE DB PASSWORD HERE
-	String password = "jonah1995";
-	//String password = "Austin";
+	//String password = "jonah1995";
+	String password = "Austin";
 
 	//Check if tables exist on startup
 	public DataTransfer() {
@@ -15,6 +15,7 @@ public class DataTransfer {
 					System.out.println("DataTransfer Constructor");
                     Class.forName("oracle.jdbc.OracleDriver");
 					Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", password);
+					System.out.println("Connected to Database");
 					DatabaseMetaData meta = con.getMetaData();
 					ResultSet sellTable = meta.getTables(null, null, "PRODUCTS", null);
 
@@ -43,7 +44,7 @@ public class DataTransfer {
 					stmt2.close();
 					con.close();
 		}
-        catch(Exception ex) { }
+        catch(Exception ex) {System.out.println("Constructor failed: " + ex); }
 				  
 	}
 	

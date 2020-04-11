@@ -61,12 +61,7 @@ public class SearchUtility {
              
             }
         }
-<<<<<<< HEAD
-		
-		//System.out.println("Exiting Search Utility");
-=======
-		// Return filtered list
->>>>>>> 9eec893137f6afc7b97416ebb4f55e12db337bc5
+
         return itemGallery;
     }
 

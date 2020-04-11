@@ -1,11 +1,15 @@
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import java.sql.*;
 
 public class UnitTestRunner {
 
   public static void main(String[] args) {
-  
+	try{
+	Class.forName("oracle.jdbc.OracleDriver");
+	}
+	catch (Exception ex) {}
     Result result = JUnitCore.runClasses(TestJunit.class);
 	
     for (Failure failure : result.getFailures()) {

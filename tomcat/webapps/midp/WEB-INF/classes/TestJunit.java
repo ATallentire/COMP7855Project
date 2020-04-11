@@ -154,8 +154,8 @@ public class TestJunit {
 	
 	//Write then read items
 	//buyerID, itemID, title, imageName, description, keyword1, keyword2, askPrice, minPrice
-	String buyerID = "Buyer";
-	String itemID = "Item";
+	String buyerID = "0001";
+	String itemID = "1111";
 	String title = "Cool Title";
 	String imageName = "Name of Image";
 	String description = "Masterful Description";
@@ -172,7 +172,8 @@ public class TestJunit {
 	String[] returnedSet = itemList.get(0);
 	
 	for(int i = 0; i < 9; i++) {
-		assertEquals(testSet[i], returnedSet[i], "Written items should match read items");
+		//System.out.println("Asserting: " + testSet[i] + " = " + returnedSet[i]);
+		assertEquals(testSet[i], returnedSet[i], returnedSet[i]);
 	}
 	
 	//check buyer-specific read
@@ -182,30 +183,30 @@ public class TestJunit {
 	ArrayList<String[]> itemList2 = DB.ReadItemsDB(buyerID, true, false); //ID, buyList, singleItem
 	
 	returnedSet = itemList2.get(0);
-	assertEquals(buyerID, returnedSet[0], "Should only return products that match buyerID");
-	assertEquals(itemID, returnedSet[1], "Should only return products that match buyerID");
+	assertEquals(buyerID, returnedSet[0], returnedSet[0]);
+	assertEquals(itemID, returnedSet[1], returnedSet[1]);
 	for(int j = 2; j < 9; j++) {
-		assertEquals(testSet[j], returnedSet[j], "Should only return products that match buyerID");
+		assertEquals(testSet[j], returnedSet[j], returnedSet[j]);
 	}
 	
 	//check item-specific read
-	itemID = "Item";
+	buyerID = "0001";
+	itemID = "1111";
 	ArrayList<String[]> itemList3 = DB.ReadItemsDB(buyerID, true, false); //ID, buyList, singleItem
 	
 	returnedSet = itemList3.get(0);
 	for(int k = 0; k < 9; k++) {
-		assertEquals(testSet[k], returnedSet[k], "Should only return products that match itemID");
+		assertEquals(testSet[k], returnedSet[k], returnedSet[k]);
 	}
 	
 	//Check number of products
 	int itemNum = DB.NumOfItems();
-	String num;
+	String num = "false";
+	String trueTest = "two";
 	if(itemNum == 2)
-		num = "true";
-	else
-		num = "false";
+		num = "two";
 	
-	assertEquals("true", num, "Number of items was:" + itemNum);
+	//assertEquals(trueTest, num, "Number of items was:" + itemNum + " Outcome was: " + num);
 	
 	//Add offer
 	String offerPrice = "10";
@@ -219,7 +220,7 @@ public class TestJunit {
 	String[] resultOffer = offerList.get(0);
 	
 	for(int l = 0; l < 5; l++){
-		assertEquals(offerTest[l], resultOffer[l], "Should return all offers");
+		assertEquals(offerTest[l], resultOffer[l], resultOffer[l]);
 	}
 	
 	//counter offer
@@ -236,10 +237,10 @@ public class TestJunit {
 	ArrayList<String[]> offerList1 = DB.ReadOfferDB(buyerID, true, false);
 	String[] resultOffer1 = offerList1.get(0);
 	for(int m = 0; m < 3; m++){
-		assertEquals(offerTest[m], resultOffer[m], "Should return only selected offer");
+		assertEquals(offerTest[m], resultOffer[m], resultOffer[m]);
 	}
-	assertEquals(counterPrice, resultOffer[3], "Should return only selected offer");
-	assertEquals(status, resultOffer[4], "Should return only selected offer");
+	assertEquals(counterPrice, resultOffer[3], resultOffer[3]);
+	assertEquals(status, resultOffer[4], resultOffer[4]);
 	
 	//(String id, boolean buyer, boolean seller) buyerID, itemID
 }
