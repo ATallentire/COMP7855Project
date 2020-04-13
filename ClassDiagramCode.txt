@@ -1,0 +1,33 @@
+// Cool Class Diagram
+// ------------------
+
+// Chain elements like this
+[UIServlets{bg:skyblue}]^[HttpServlet{bg:khaki}]
+[SearchServlet{bg:skyblue}]^[HttpServlet]
+[HttpServlet]^[GenericServlet{bg:khaki}]
+[UIServlets]uses>[DataTransfer{bg:palegreen}]
+[SearchServlet]uses>[DataTransfer]
+[SearchServlet]uses>[SearchUtility{bg:palegreen}]
+[DataTransfer]uses>[java.sql{bg:khaki}]
+[UploadServlet{bg:skyblue}]uses>[apache.commons.fileupload{bg:khaki}]
+[UploadServlet]uses>[DataTransfer]
+[UploadServlet]^[HttpServlet]
+
+// Add notes
+[UIServlets]-[note: For each UI servlet in application{bg:coral}]
+
+// Add more detail
+[SearchUtility|(No member variables)|searchFunc(String titleSearch, StringArr keywords, doubleArr searchPrice, ArrayList(StringArr) itemDetails);keyword_match(StringArr keywords, String kw1, String kw2, int keyID)]
+
+[DataTransfer|String password|DataTransfer();NumOfItems();WriteItemsDB(String buyerID, itemID, title, imageName, description, kw1, kw2, askPrice, minPrice);WriteOfferDB(String itemID, buyerID, offerPrice, counterPrice, status, boolean reWrite);ReadItemsDB(String buyerID, boolean buyList, boolean singleItem);ReadOfferDB(String id, boolean buyer, boolean seller);]
+[SearchServlet|DataTransfer DB; SearchUtility SU; String id;String action;ArrayList(StringArr) itemGallery|doGet(HttpServletRequest request,
+      HttpServletResponse response);doPost(HttpServletRequest request,
+                     HttpServletResponse response)]
+[UIServlets{bg:blue}|DataTransfer DB;String id;String action;String source |doGet(HttpServletRequest request,
+      HttpServletResponse response);doPost(HttpServletRequest request,
+                     HttpServletResponse response)]
+[UploadServlet|ServletFileUploader uploader; String imDir;DataTransfer DB;String id;String kw1;String kw2; String title; String fileName; String desc; String price; String minPrice |doGet(HttpServletRequest request,
+      HttpServletResponse response);doPost(HttpServletRequest request,
+                     HttpServletResponse response)]
+
+[HttpServlet|doGet(); doPost(); doPut(); doDelete();getServletInfo();]
